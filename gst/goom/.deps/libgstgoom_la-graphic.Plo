@@ -1,0 +1,6 @@
+libgstgoom_la-graphic.lo: graphic.c /usr/include/stdc-predef.h \
+ goom_graphic.h
+
+/usr/include/stdc-predef.h:
+
+goom_graphic.h:

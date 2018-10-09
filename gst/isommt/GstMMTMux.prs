@@ -1,0 +1,6 @@
+[_presets_]
+version=1.6.0
+element-name=GstMMTMux
+
+[Profile YouTube]
+faststart=true

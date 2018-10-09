@@ -1,0 +1,6 @@
+libgstisommt_la-MMTBitstream.lo: MMTBitstream.c \
+ /usr/include/stdc-predef.h MMTBitstream.h
+
+/usr/include/stdc-predef.h:
+
+MMTBitstream.h:
