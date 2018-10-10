@@ -167,6 +167,16 @@ typedef void (*RTPSessionNotifyNACK) (RTPSession *sess,
 typedef void (*RTPSessionReconfigure) (RTPSession *sess, gpointer user_data);
 
 /**
+ * RTPSessionNotifyEarlyRTCP:
+ * @sess: an #RTPSession
+ * @user_data: user data specified when registering
+ *
+ * Notifies of early RTCP being requested
+ */
+typedef void (*RTPSessionNotifyEarlyRTCP) (RTPSession *sess,
+    gpointer user_data);
+
+/**
  * RTPSessionCallbacks:
  * @RTPSessionProcessRTP: callback to process RTP packets
  * @RTPSessionSendRTP: callback for sending RTP packets
@@ -177,6 +187,7 @@ typedef void (*RTPSessionReconfigure) (RTPSession *sess, gpointer user_data);
  * @RTPSessionRequestTime: callback for requesting the current time
  * @RTPSessionNotifyNACK: callback for notifying NACK
  * @RTPSessionReconfigure: callback for requesting reconfiguration
+ * @RTPSessionNotifyEarlyRTCP: callback for notifying early RTCP
  *
  * These callbacks can be installed on the session manager to get notification
  * when RTP and RTCP packets are ready for further processing. These callbacks
@@ -193,6 +204,7 @@ typedef struct {
   RTPSessionRequestTime request_time;
   RTPSessionNotifyNACK  notify_nack;
   RTPSessionReconfigure reconfigure;
+  RTPSessionNotifyEarlyRTCP notify_early_rtcp;
 } RTPSessionCallbacks;
 
 /**
@@ -269,6 +281,7 @@ struct _RTPSession {
   gpointer              request_time_user_data;
   gpointer              notify_nack_user_data;
   gpointer              reconfigure_user_data;
+  gpointer              notify_early_rtcp_user_data;
 
   RTPSessionStats stats;
   RTPSessionStats bye_stats;
@@ -284,8 +297,8 @@ struct _RTPSession {
 
 /**
  * RTPSessionClass:
- * @on_new_ssrc: emited when a new source is found
- * @on_bye_ssrc: emited when a source is gone
+ * @on_new_ssrc: emitted when a new source is found
+ * @on_bye_ssrc: emitted when a source is gone
  *
  * The session class.
  */

@@ -251,9 +251,6 @@ enum
   PROP_RTCP_SYNC_SEND_TIME
 };
 
-#define GST_RTP_SESSION_GET_PRIVATE(obj)  \
-	   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GST_TYPE_RTP_SESSION, GstRtpSessionPrivate))
-
 #define GST_RTP_SESSION_LOCK(sess)   g_mutex_lock (&(sess)->priv->lock)
 #define GST_RTP_SESSION_UNLOCK(sess) g_mutex_unlock (&(sess)->priv->lock)
 
@@ -306,6 +303,8 @@ static GstClockTime gst_rtp_session_request_time (RTPSession * session,
 static void gst_rtp_session_notify_nack (RTPSession * sess,
     guint16 seqnum, guint16 blp, guint32 ssrc, gpointer user_data);
 static void gst_rtp_session_reconfigure (RTPSession * sess, gpointer user_data);
+static void gst_rtp_session_notify_early_rtcp (RTPSession * sess,
+    gpointer user_data);
 
 static RTPSessionCallbacks callbacks = {
   gst_rtp_session_process_rtp,
@@ -317,7 +316,8 @@ static RTPSessionCallbacks callbacks = {
   gst_rtp_session_request_key_unit,
   gst_rtp_session_request_time,
   gst_rtp_session_notify_nack,
-  gst_rtp_session_reconfigure
+  gst_rtp_session_reconfigure,
+  gst_rtp_session_notify_early_rtcp
 };
 
 /* GObject vmethods */
@@ -473,7 +473,7 @@ on_notify_stats (RTPSession * session, GParamSpec * spec,
 }
 
 #define gst_rtp_session_parent_class parent_class
-G_DEFINE_TYPE (GstRtpSession, gst_rtp_session, GST_TYPE_ELEMENT);
+G_DEFINE_TYPE_WITH_PRIVATE (GstRtpSession, gst_rtp_session, GST_TYPE_ELEMENT);
 
 static void
 gst_rtp_session_class_init (GstRtpSessionClass * klass)
@@ -483,8 +483,6 @@ gst_rtp_session_class_init (GstRtpSessionClass * klass)
 
   gobject_class = (GObjectClass *) klass;
   gstelement_class = (GstElementClass *) klass;
-
-  g_type_class_add_private (klass, sizeof (GstRtpSessionPrivate));
 
   gobject_class->finalize = gst_rtp_session_finalize;
   gobject_class->set_property = gst_rtp_session_set_property;
@@ -509,8 +507,9 @@ gst_rtp_session_class_init (GstRtpSessionClass * klass)
    */
   gst_rtp_session_signals[SIGNAL_CLEAR_PT_MAP] =
       g_signal_new ("clear-pt-map", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_ACTION, G_STRUCT_OFFSET (GstRtpSessionClass, clear_pt_map),
-      NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+      G_STRUCT_OFFSET (GstRtpSessionClass, clear_pt_map),
+      NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
 
   /**
    * GstRtpSession::on-new-ssrc:
@@ -801,7 +800,7 @@ gst_rtp_session_class_init (GstRtpSessionClass * klass)
 static void
 gst_rtp_session_init (GstRtpSession * rtpsession)
 {
-  rtpsession->priv = GST_RTP_SESSION_GET_PRIVATE (rtpsession);
+  rtpsession->priv = gst_rtp_session_get_instance_private (rtpsession);
   g_mutex_init (&rtpsession->priv->lock);
   g_cond_init (&rtpsession->priv->cond);
   rtpsession->priv->sysclock = gst_system_clock_obtain ();
@@ -1243,8 +1242,7 @@ gst_rtp_session_change_state (GstElement * element, GstStateChange transition)
       break;
     case GST_STATE_CHANGE_READY_TO_PAUSED:
       GST_RTP_SESSION_LOCK (rtpsession);
-      if (rtpsession->send_rtp_src)
-        rtpsession->priv->wait_send = TRUE;
+      rtpsession->priv->wait_send = TRUE;
       GST_RTP_SESSION_UNLOCK (rtpsession);
       break;
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
@@ -2716,4 +2714,16 @@ gst_rtp_session_reconfigure (RTPSession * sess, gpointer user_data)
     gst_pad_push_event (send_rtp_sink, gst_event_new_reconfigure ());
     gst_object_unref (send_rtp_sink);
   }
+}
+
+static void
+gst_rtp_session_notify_early_rtcp (RTPSession * sess, gpointer user_data)
+{
+  GstRtpSession *rtpsession = GST_RTP_SESSION (user_data);
+
+  GST_DEBUG_OBJECT (rtpsession, "Notified of early RTCP");
+  /* with an early RTCP request, we might have to start the RTCP thread */
+  GST_RTP_SESSION_LOCK (rtpsession);
+  signal_waiting_rtcp_thread_unlocked (rtpsession);
+  GST_RTP_SESSION_UNLOCK (rtpsession);
 }

@@ -42,8 +42,13 @@
 #else
 #include <gst/gl/egl/gstegl.h>
 #include <gst/gl/egl/gstgldisplay_egl.h>
+#ifdef HAVE_QT_QPA_HEADER
+#include <qpa/qplatformnativeinterface.h>
 #endif
 #endif
+#endif
+
+#include <gst/gl/gstglfuncs.h>
 
 #define GST_CAT_DEFAULT qt_gl_utils_debug
 GST_DEBUG_CATEGORY_STATIC (GST_CAT_DEFAULT);
@@ -82,8 +87,10 @@ gst_qt_get_gl_display ()
   }
 #endif
 #if GST_GL_HAVE_PLATFORM_EGL && GST_GL_HAVE_WINDOW_ANDROID
-  if (QString::fromUtf8 ("android") == app->platformName())
-    display = (GstGLDisplay *) gst_gl_display_egl_new_with_egl_display (eglGetDisplay(EGL_DEFAULT_DISPLAY));
+  if (QString::fromUtf8 ("android") == app->platformName()) {
+    EGLDisplay egl_display = (EGLDisplay) gst_gl_display_egl_get_from_native (GST_GL_DISPLAY_TYPE_ANY, 0);
+    display = (GstGLDisplay *) gst_gl_display_egl_new_with_egl_display (egl_display);
+  }
 #elif GST_GL_HAVE_PLATFORM_EGL && defined (HAVE_QT_EGLFS)
   if (QString::fromUtf8("eglfs") == app->platformName()) {
 #if GST_GL_HAVE_WINDOW_VIV_FB
@@ -108,8 +115,16 @@ gst_qt_get_gl_display ()
     }
 
     display = (GstGLDisplay *) gst_gl_display_viv_fb_new (disp_idx);
+#elif defined(HAVE_QT_QPA_HEADER)
+    QPlatformNativeInterface *native =
+        QGuiApplication::platformNativeInterface();
+    EGLDisplay egl_display = (EGLDisplay)
+        native->nativeResourceForWindow("egldisplay", NULL);
+    if (egl_display != EGL_NO_DISPLAY)
+      display = (GstGLDisplay *) gst_gl_display_egl_new_with_egl_display (egl_display);
 #else
-    display = (GstGLDisplay *) gst_gl_display_egl_new_with_egl_display (eglGetDisplay(EGL_DEFAULT_DISPLAY));
+    EGLDisplay egl_display = (EGLDisplay) gst_gl_display_egl_get_from_native (GST_GL_DISPLAY_TYPE_ANY, 0);
+    display = (GstGLDisplay *) gst_gl_display_egl_new_with_egl_display (egl_display);
 #endif
   }
 #endif
@@ -191,12 +206,12 @@ gst_qt_get_gl_wrapcontext (GstGLDisplay * display,
     GST_ERROR ("cannot wrap qt OpenGL context");
     return FALSE;
   }
- 
+
   (void) platform;
   (void) gl_api;
   (void) gl_handle;
 
-  gst_gl_context_activate (*wrap_glcontext, TRUE);
+  gst_gl_context_activate(*wrap_glcontext, TRUE);
   if (!gst_gl_context_fill_info (*wrap_glcontext, &error)) {
     GST_ERROR ("failed to retrieve qt context info: %s", error->message);
     g_object_unref (*wrap_glcontext);
@@ -229,7 +244,7 @@ gst_qt_get_gl_wrapcontext (GstGLDisplay * display,
       wglMakeCurrent (device, 0);
       gst_object_unref (window);
       if (!gst_gl_context_create (*context, *wrap_glcontext, &error)) {
-        GST_ERROR ("%p failed to create shared GL context: %s", this, error->message);
+        GST_ERROR ("failed to create shared GL context: %s", error->message);
         g_object_unref (*context);
         *context = NULL;
         g_object_unref (*wrap_glcontext);
@@ -238,10 +253,10 @@ gst_qt_get_gl_wrapcontext (GstGLDisplay * display,
         return FALSE;
       }
       wglMakeCurrent (device, (HGLRC) gl_handle);
-    }
+    } G_STMT_END;
 #endif
     gst_gl_context_activate (*wrap_glcontext, FALSE);
-  } G_STMT_END;
+  }
 
   return TRUE;
 }

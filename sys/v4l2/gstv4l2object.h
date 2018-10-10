@@ -35,6 +35,7 @@
 #include <gst/base/gstpushsrc.h>
 
 #include <gst/video/video.h>
+#include <unistd.h>
 
 typedef struct _GstV4l2Object GstV4l2Object;
 typedef struct _GstV4l2ObjectClassHelper GstV4l2ObjectClassHelper;
@@ -194,7 +195,7 @@ struct _GstV4l2Object {
   gint (*ioctl) (gint fd, gulong request, ...);
   gssize (*read) (gint fd, gpointer buffer, gsize n);
   gpointer (*mmap) (gpointer start, gsize length, gint prot, gint flags,
-      gint fd, gint64 offset);
+      gint fd,  off_t offset);
   gint (*munmap) (gpointer _start, gsize length);
 
   /* Quirks */
@@ -276,8 +277,11 @@ gint         gst_v4l2_object_extrapolate_stride (const GstVideoFormatInfo * finf
 
 gboolean     gst_v4l2_object_set_format  (GstV4l2Object * v4l2object, GstCaps * caps, GstV4l2Error * error);
 gboolean     gst_v4l2_object_try_format  (GstV4l2Object * v4l2object, GstCaps * caps, GstV4l2Error * error);
+gboolean     gst_v4l2_object_try_import  (GstV4l2Object * v4l2object, GstBuffer * buffer);
 
-gboolean     gst_v4l2_object_caps_equal  (GstV4l2Object * v4l2object, GstCaps * caps);
+gboolean     gst_v4l2_object_caps_equal       (GstV4l2Object * v4l2object, GstCaps * caps);
+gboolean     gst_v4l2_object_caps_is_subset   (GstV4l2Object * v4l2object, GstCaps * caps);
+GstCaps *    gst_v4l2_object_get_current_caps (GstV4l2Object * v4l2object);
 
 gboolean     gst_v4l2_object_unlock      (GstV4l2Object * v4l2object);
 gboolean     gst_v4l2_object_unlock_stop (GstV4l2Object * v4l2object);

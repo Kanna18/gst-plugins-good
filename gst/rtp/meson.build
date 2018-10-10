@@ -92,6 +92,15 @@ rtp_sources = [
   'gstrtpstreampay.c',
   'gstrtpstreamdepay.c',
   'gstrtputils.c',
+  'rtpulpfeccommon.c',
+  'gstrtpulpfecdec.c',
+  'gstrtpulpfecenc.c',
+  'rtpredcommon.c',
+  'gstrtpredenc.c',
+  'gstrtpreddec.c',
+  'rtpstorage.c',
+  'rtpstoragestream.c',
+  'gstrtpstorage.c',
 ]
 
 rtp_args = [
@@ -109,3 +118,4 @@ gstrtp = library('gstrtp',
   install : true,
   install_dir : plugins_install_dir,
 )
+pkgconfig.generate(gstrtp, install_dir : plugins_pkgconfig_install_dir)

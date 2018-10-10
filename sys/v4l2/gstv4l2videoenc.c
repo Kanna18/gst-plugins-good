@@ -274,6 +274,7 @@ gst_v4l2_video_enc_finish (GstVideoEncoder * encoder)
     GstTask *task = encoder->srcpad->task;
 
     /* Wait for the task to be drained */
+    GST_DEBUG_OBJECT (self, "Waiting for encoder stop");
     GST_OBJECT_LOCK (task);
     while (GST_TASK_STATE (task) == GST_TASK_STARTED)
       GST_TASK_WAIT (task);
@@ -334,14 +335,6 @@ gst_v4l2_video_enc_set_format (GstVideoEncoder * encoder,
 
   if (!gst_v4l2_object_set_format (self->v4l2output, state->caps, &error)) {
     gst_v4l2_error (self, &error);
-    return FALSE;
-  }
-
-  /* activating a capture pool will also call STREAMON. CODA driver will
-   * refuse to configure the output if the capture is stremaing. */
-  if (!gst_buffer_pool_set_active (GST_BUFFER_POOL (self->v4l2capture->pool),
-          TRUE)) {
-    GST_WARNING_OBJECT (self, "Could not activate capture buffer pool.");
     return FALSE;
   }
 
@@ -528,6 +521,10 @@ gst_v4l2_video_enc_negotiate (GstVideoEncoder * encoder)
 
   GST_DEBUG_OBJECT (self, "Negotiating %s profile and level.",
       klass->codec_name);
+
+  /* Only renegotiate on upstream changes */
+  if (self->input_state)
+    return TRUE;
 
   allowed_caps = gst_pad_get_allowed_caps (GST_VIDEO_ENCODER_SRC_PAD (encoder));
 
@@ -742,6 +739,12 @@ gst_v4l2_video_enc_handle_frame (GstVideoEncoder * encoder,
         goto activate_failed;
     }
 
+    if (!gst_buffer_pool_set_active
+        (GST_BUFFER_POOL (self->v4l2capture->pool), TRUE)) {
+      GST_WARNING_OBJECT (self, "Could not activate capture buffer pool.");
+      goto activate_failed;
+    }
+
     GST_DEBUG_OBJECT (self, "Starting encoding thread");
 
     /* Start the processing task, when it quits, the task will disable input
@@ -815,6 +818,7 @@ gst_v4l2_video_enc_decide_allocation (GstVideoEncoder *
 {
   GstV4l2VideoEnc *self = GST_V4L2_VIDEO_ENC (encoder);
   GstVideoCodecState *state = gst_video_encoder_get_output_state (encoder);
+  GstCaps *caps;
   GstV4l2Error error = GST_V4L2_ERROR_INIT;
   GstClockTime latency;
   gboolean ret = FALSE;
@@ -823,11 +827,15 @@ gst_v4l2_video_enc_decide_allocation (GstVideoEncoder *
    * GstVideoEncoder have set the width, height and framerate into the state
    * caps. These are needed by the driver to calculate the buffer size and to
    * implement bitrate adaptation. */
-  if (!gst_v4l2_object_set_format (self->v4l2capture, state->caps, &error)) {
+  caps = gst_caps_copy (state->caps);
+  gst_structure_remove_field (gst_caps_get_structure (caps, 0), "colorimetry");
+  if (!gst_v4l2_object_set_format (self->v4l2capture, caps, &error)) {
     gst_v4l2_error (self, &error);
+    gst_caps_unref (caps);
     ret = FALSE;
     goto done;
   }
+  gst_caps_unref (caps);
 
   if (gst_v4l2_object_decide_allocation (self->v4l2capture, query)) {
     GstVideoEncoderClass *enc_class = GST_VIDEO_ENCODER_CLASS (parent_class);
@@ -1042,8 +1050,6 @@ gst_v4l2_video_enc_subinstance_init (GTypeInstance * instance, gpointer g_class)
       GST_OBJECT (GST_VIDEO_ENCODER_SRC_PAD (self)),
       V4L2_BUF_TYPE_VIDEO_CAPTURE, klass->default_device,
       gst_v4l2_get_input, gst_v4l2_set_input, NULL);
-  self->v4l2capture->no_initial_format = TRUE;
-  self->v4l2output->keep_aspect = FALSE;
 }
 
 static void

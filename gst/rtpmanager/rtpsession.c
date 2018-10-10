@@ -722,16 +722,15 @@ rtp_session_create_sources (RTPSession * sess)
 static void
 create_source_stats (gpointer key, RTPSource * source, GValueArray * arr)
 {
-  GValue value = G_VALUE_INIT;
+  GValue *value;
   GstStructure *s;
 
   g_object_get (source, "stats", &s, NULL);
 
-  g_value_init (&value, GST_TYPE_STRUCTURE);
-  gst_value_set_structure (&value, s);
-  g_value_array_append (arr, &value);
-  gst_structure_free (s);
-  g_value_unset (&value);
+  g_value_array_append (arr, NULL);
+  value = g_value_array_get_nth (arr, arr->n_values - 1);
+  g_value_init (value, GST_TYPE_STRUCTURE);
+  g_value_take_boxed (value, s);
 }
 
 static GstStructure *
@@ -1114,6 +1113,10 @@ rtp_session_set_callbacks (RTPSession * sess, RTPSessionCallbacks * callbacks,
   if (callbacks->reconfigure) {
     sess->callbacks.reconfigure = callbacks->reconfigure;
     sess->reconfigure_user_data = user_data;
+  }
+  if (callbacks->notify_early_rtcp) {
+    sess->callbacks.notify_early_rtcp = callbacks->notify_early_rtcp;
+    sess->notify_early_rtcp_user_data = user_data;
   }
 }
 
@@ -2612,8 +2615,12 @@ rtp_session_process_pli (RTPSession * sess, guint32 sender_ssrc,
     return;
 
   src = find_source (sess, sender_ssrc);
-  if (src == NULL)
-    return;
+  if (src == NULL) {
+    /* try to find a src with media_ssrc instead */
+    src = find_source (sess, media_ssrc);
+    if (src == NULL)
+      return;
+  }
 
   rtp_session_request_local_key_unit (sess, src, media_ssrc, FALSE,
       current_time);
@@ -2731,6 +2738,9 @@ rtp_session_process_feedback (RTPSession * sess, GstRTCPPacket * packet,
   if (sess->scheduled_bye && src && RTP_SOURCE_IS_MARKED_BYE (src))
     return;
 
+  if (src)
+    g_object_ref (src);
+
   fci_data = gst_rtcp_packet_fb_get_fci (packet);
   fci_length = gst_rtcp_packet_fb_get_fci_length (packet) * sizeof (guint32);
 
@@ -2798,6 +2808,9 @@ rtp_session_process_feedback (RTPSession * sess, GstRTCPPacket * packet,
         break;
     }
   }
+
+  if (src)
+    g_object_unref (src);
 }
 
 /**
@@ -3009,6 +3022,10 @@ rtp_session_send_rtp (RTPSession * sess, gpointer data, gboolean is_list,
   if (created)
     on_new_sender_ssrc (sess, source);
 
+  if (!source->internal)
+    /* FIXME: Send GstRTPCollision upstream  */
+    goto collision;
+
   prevsender = RTP_SOURCE_IS_SENDER (source);
   oldrate = source->bitrate;
 
@@ -3031,6 +3048,15 @@ invalid_packet:
     gst_mini_object_unref (GST_MINI_OBJECT_CAST (data));
     RTP_SESSION_UNLOCK (sess);
     GST_DEBUG ("invalid RTP packet received");
+    return GST_FLOW_OK;
+  }
+collision:
+  {
+    g_object_unref (source);
+    gst_mini_object_unref (GST_MINI_OBJECT_CAST (data));
+    RTP_SESSION_UNLOCK (sess);
+    GST_WARNING ("non-internal source with same ssrc %08x, drop packet",
+        pinfo.ssrc);
     return GST_FLOW_OK;
   }
 }
@@ -3380,8 +3406,8 @@ session_report_blocks (const gchar * key, RTPSource * source, ReportData * data)
     return;
   }
 
-  /* only report about other sender */
-  if (source == data->source)
+  /* only report about remote sources */
+  if (source->internal)
     goto reported;
 
   if (!RTP_SOURCE_IS_SENDER (source)) {
@@ -3973,11 +3999,15 @@ rtp_session_are_all_sources_bye (RTPSession * sess)
   GHashTableIter iter;
   RTPSource *src;
 
+  RTP_SESSION_LOCK (sess);
   g_hash_table_iter_init (&iter, sess->ssrcs[sess->mask_idx]);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer *) & src)) {
-    if (src->internal && !src->sent_bye)
+    if (src->internal && !src->sent_bye) {
+      RTP_SESSION_UNLOCK (sess);
       return FALSE;
+    }
   }
+  RTP_SESSION_UNLOCK (sess);
 
   return TRUE;
 }
@@ -4344,6 +4374,10 @@ rtp_session_send_rtcp (RTPSession * sess, GstClockTime max_delay)
     return FALSE;
 
   now = sess->callbacks.request_time (sess, sess->request_time_user_data);
+
+  /* notify the application that we intend to send early RTCP */
+  if (sess->callbacks.notify_early_rtcp)
+    sess->callbacks.notify_early_rtcp (sess, sess->notify_early_rtcp_user_data);
 
   return rtp_session_request_early_rtcp (sess, now, max_delay);
 }

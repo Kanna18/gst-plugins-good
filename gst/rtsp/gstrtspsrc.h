@@ -123,8 +123,8 @@ struct _GstRTSPStream {
   GstElement   *udpsink[2];
   GstPad       *rtcppad;
 
-  /* fakesrc for sending dummy data */
-  GstElement   *fakesrc;
+  /* fakesrc for sending dummy data or appsrc for sending backchannel data */
+  GstElement   *rtpsrc;
 
   /* state */
   guint         port;
@@ -161,6 +161,7 @@ struct _GstRTSPStream {
   gchar        *destination;
   gboolean      is_multicast;
   guint         ttl;
+  gboolean      is_backchannel;
 
   /* A unique and stable id we will use for the stream start event */
   gchar *stream_id;
@@ -199,6 +200,7 @@ struct _GstRTSPSrc {
   /* UDP mode loop */
   gint             pending_cmd;
   gint             busy_cmd;
+  GCond            cmd_cond;
   gboolean         ignore_timeout;
   gboolean         open_error;
 
@@ -254,6 +256,8 @@ struct _GstRTSPSrc {
   guint64           max_ts_offset_adjustment;
   gint64            max_ts_offset;
   gboolean          max_ts_offset_is_set;
+  gint              backchannel;
+  GstClockTime      teardown_timeout;
 
   /* state */
   GstRTSPState       state;
@@ -289,6 +293,9 @@ struct _GstRTSPSrc {
 
   GstRTSPConnInfo  conninfo;
 
+  /* SET/GET PARAMETER requests queue */
+  GQueue set_get_param_q;
+
   /* a list of RTSP extensions as GstElement */
   GstRTSPExtensionList  *extensions;
 
@@ -298,6 +305,12 @@ struct _GstRTSPSrc {
 
 struct _GstRTSPSrcClass {
   GstBinClass parent_class;
+
+ /* action signals */
+  gboolean (*get_parameter) (GstRTSPSrc *rtsp, const gchar *parameter, const gchar *content_type, GstPromise *promise);
+  gboolean (*get_parameters) (GstRTSPSrc *rtsp, gchar **parameters, const gchar *content_type, GstPromise *promise);
+  gboolean (*set_parameter) (GstRTSPSrc *rtsp, const gchar *name, const gchar *value, const gchar *content_type, GstPromise *promise);
+  GstFlowReturn (*push_backchannel_buffer) (GstRTSPSrc *src, guint id, GstSample *sample);
 };
 
 GType gst_rtspsrc_get_type(void);
