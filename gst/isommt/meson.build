@@ -13,6 +13,7 @@ mp4_sources = [
   'properties.c',
   'MMTPacket.c',
   'process_mfu.c',
+  'MMTBitstream.c',
   'mmtsignal.c'
 ]
 
