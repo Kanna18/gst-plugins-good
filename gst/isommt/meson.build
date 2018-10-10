@@ -13,8 +13,7 @@ mp4_sources = [
   'properties.c',
   'MMTPacket.c',
   'process_mfu.c',
-  'mmtsignal.c',
-  'gstqtmuxmap.c'
+  'mmtsignal.c'
 ]
 
 gstismmt = library('gstisommt',
