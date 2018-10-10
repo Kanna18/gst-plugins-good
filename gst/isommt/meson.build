@@ -6,7 +6,6 @@ mp4_sources = [
   'mmtdemux_dump.c',
   'mmtdemux_lang.c',
   'gstisoff.c',
-  'gstqtmux.c',
   'gstqtmoovrecover.c',
   'atoms.c',
   'atomsrecovery.c',
