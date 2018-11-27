@@ -415,9 +415,9 @@ int ParseMMTPV1Pack(GstMMTDemux * mmtdemux, unsigned char*  Bitstream, GstBuffer
 	unsigned short int payld_length=Read16(Bitstream);   //Pay load length...starts the next MMTP Packet.
 	unsigned char * PayLoadBuf;
 	if(av_packet == -1)
-		return -1;
+		goto skip;
 	if(payld_length <= 1)
-		return -1;
+		goto skip;
 	GST_DEBUG_OBJECT( NULL, "SSSS==================== payld_length: %d %03x  ::::: \n", payld_length, payld_length);
 
 	//unsigned short int PayHDRsize=20;//24;
@@ -561,6 +561,10 @@ int ParseMMTPV1Pack(GstMMTDemux * mmtdemux, unsigned char*  Bitstream, GstBuffer
 	GainMMTdemux(mmtdemux, PayLoadBuf,payld_length-6,FT,av_packet, gbuf);
    free(PayLoadBuf);
 	return 0;
+skip:
+	 if(gbuf)
+		  gst_buffer_unref (gbuf);
+	 return -1;
 }
 
 void ParseMMTPV0Pack(unsigned char*  Bitstream )

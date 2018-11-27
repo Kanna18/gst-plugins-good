@@ -58,7 +58,8 @@ enum QtDemuxState
   QTDEMUX_STATE_HEADER,         /* Parsing the header */
   QTDEMUX_STATE_MOVIE,          /* Parsing/Playing the media data */
   QTDEMUX_STATE_BUFFER_MDAT,     /* Buffering the mdat atom */
-  QTDEMUX_STATE_BUFFER_MM     /* Buffering the mdat atom */
+  QTDEMUX_STATE_BUFFER_MM,
+  QTDEMUX_STATE_META     /* Buffering the mdat atom */
 };
 
 struct _GstMMTDemux {
@@ -75,6 +76,7 @@ struct _GstMMTDemux {
 
   gboolean posted_redirect;
 
+  GstClockTime seek_position;
   gint is_complete;
   gint is_adc_present;
   gint reserved;
@@ -110,6 +112,7 @@ struct _GstMMTDemux {
   gint     n_audio_streams;
   gint     n_sub_streams;
   gint     is_mmpu;
+  guint64  sample_ptsoffset[100];
 
   GstFlowCombiner *flowcombiner;
 

@@ -78,9 +78,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-pc-linux-gnu
-host_triplet = x86_64-pc-linux-gnu
-target_triplet = x86_64-pc-linux-gnu
+build_triplet = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
+target_triplet = i686-pc-linux-gnu
 subdir = gst/isommt
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp $(noinst_HEADERS)
@@ -161,13 +161,14 @@ am_libgstisommt_la_OBJECTS = libgstisommt_la-isommt-plugin.lo \
 	libgstisommt_la-gstrtpxqtdepay.lo libgstisommt_la-mmtdemux.lo \
 	libgstisommt_la-mmtdemux_types.lo \
 	libgstisommt_la-mmtdemux_dump.lo \
-	libgstisommt_la-mmtdemux_lang.lo \
+	libgstisommt_la-mmtdemux_lang.lo libgstisommt_la-gstqtmux.lo \
 	libgstisommt_la-gstqtmoovrecover.lo libgstisommt_la-atoms.lo \
 	libgstisommt_la-MMTBitstream.lo \
 	libgstisommt_la-atomsrecovery.lo \
 	libgstisommt_la-descriptors.lo libgstisommt_la-properties.lo \
-	libgstisommt_la-gstisoff.lo libgstisommt_la-MMTPacket.lo \
-	libgstisommt_la-mmtsignal.lo libgstisommt_la-process_mfu.lo
+	libgstisommt_la-gstqtmuxmap.lo libgstisommt_la-gstisoff.lo \
+	libgstisommt_la-MMTPacket.lo libgstisommt_la-mmtsignal.lo \
+	libgstisommt_la-process_mfu.lo
 libgstisommt_la_OBJECTS = $(am_libgstisommt_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -240,24 +241,24 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-AALIB_CFLAGS = -I/usr/include
-AALIB_CONFIG = /usr/bin/aalib-config
-AALIB_LIBS = -L/usr/lib/x86_64-linux-gnu -laa
-ACLOCAL = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/missing aclocal-1.15
+AALIB_CFLAGS = 
+AALIB_CONFIG = no
+AALIB_LIBS = 
+ACLOCAL = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/missing aclocal-1.14
 ACLOCAL_AMFLAGS = -I m4 -I common/m4
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 0
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/missing autoconf
-AUTOHEADER = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/missing autoheader
-AUTOMAKE = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/missing automake-1.15
-AWK = mawk
+AUTOCONF = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/missing autoconf
+AUTOHEADER = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/missing autoheader
+AUTOMAKE = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/missing automake-1.14
+AWK = gawk
 BZ2_LIBS = -lbz2
-CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-CAIRO_LIBS = -lcairo-gobject -lcairo -lgobject-2.0 -lglib-2.0
-CC = gcc
-CCAS = gcc
+CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12  
+CAIRO_LIBS = -lcairo-gobject -lcairo -lgobject-2.0 -lglib-2.0  
+CC = gcc -std=gnu99
+CCAS = gcc -std=gnu99
 CCASDEPMODE = depmode=gcc3
 CCASFLAGS = -g -O2
 CCDEPMODE = depmode=gcc3
@@ -283,8 +284,8 @@ DIRECTSOUND_LIBS =
 DLLTOOL = false
 DSYMUTIL = 
 DUMPBIN = 
-DV1394_CFLAGS =   -DHAVE_LIBIEC61883
-DV1394_LIBS = -lraw1394 -lavc1394 -lrom1394 -liec61883 -lraw1394
+DV1394_CFLAGS = 
+DV1394_LIBS = 
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
@@ -296,22 +297,22 @@ EXEEXT =
 EXTRA_CFLAGS = -fno-strict-aliasing
 FFLAGS = 
 FGREP = /bin/grep -F
-FLAC_CFLAGS = 
-FLAC_LIBS = -lFLAC
+FLAC_CFLAGS =  
+FLAC_LIBS = -lFLAC  
 GCOV = 
 GCOV_CFLAGS = 
 GCOV_LIBS = 
-GDK_PIXBUF_CFLAGS = -pthread -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GDK_PIXBUF_LIBS = -lgdk_pixbuf-2.0 -lgobject-2.0 -lglib-2.0
+GDK_PIXBUF_CFLAGS = -pthread -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GDK_PIXBUF_LIBS = -lgdk_pixbuf-2.0 -lgobject-2.0 -lglib-2.0  
 GETTEXT_MACRO_VERSION = 0.17
 GETTEXT_PACKAGE = gst-plugins-good-1.0
-GIO_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GIO_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
 GIO_LDFLAGS = 
-GIO_LIBS = -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GLIB_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GIO_LIBS = -lgio-2.0 -lgobject-2.0 -lglib-2.0  
+GLIB_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
 GLIB_EXTRA_CFLAGS =  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED
 GLIB_GENMARSHAL = glib-genmarshal
-GLIB_LIBS = -lgobject-2.0 -lgmodule-2.0 -pthread -lglib-2.0
+GLIB_LIBS = -pthread -lgobject-2.0 -lgmodule-2.0 -lglib-2.0  
 GLIB_MKENUMS = glib-mkenums
 GLIB_PREFIX = /usr
 GLIB_REQ = 2.40.0
@@ -325,25 +326,25 @@ GSTPB_PREFIX = /usr/local
 GST_AGE = 1301
 GST_ALL_LDFLAGS = -no-undefined -Wl,-Bsymbolic-functions
 GST_API_VERSION = 1.0
-GST_BASE_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GST_BASE_LIBS = -L/usr/local/lib -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
-GST_CFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_CFLAGS) $(VISIBILITY_CFLAGS)
-GST_CHECK_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GST_CHECK_LIBS = -L/usr/local/lib -lgstcheck-1.0 -lm -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
-GST_CONTROLLER_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GST_CONTROLLER_LIBS = -L/usr/local/lib -lgstcontroller-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+GST_BASE_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GST_BASE_LIBS = -L/usr/local/lib -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
+GST_CFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include   -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_CFLAGS) $(VISIBILITY_CFLAGS)
+GST_CHECK_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GST_CHECK_LIBS = -L/usr/local/lib -lgstcheck-1.0 -lm -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
+GST_CONTROLLER_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GST_CONTROLLER_LIBS = -L/usr/local/lib -lgstcontroller-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
 GST_CURRENT = 1301
-GST_CXXFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
-GST_GL_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/local/lib/gstreamer-1.0/include -I/usr/include/libdrm -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GST_GL_LIBS = -L/usr/local/lib -lgstgl-1.0 -lgstvideo-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+GST_CXXFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include   -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
+GST_GL_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/local/lib/gstreamer-1.0/include -I/usr/include/libdrm -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GST_GL_LIBS = -L/usr/local/lib -lgstgl-1.0 -lgstvideo-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
 GST_LEVEL_DEFAULT = GST_LEVEL_NONE
-GST_LIBS = -L/usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+GST_LIBS = -L/usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
 GST_LIBVERSION = 1301:0:1301
 GST_LICENSE = LGPL
 GST_LT_LDFLAGS =  -version-info 1301:0:1301
-GST_NET_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GST_NET_LIBS = -L/usr/local/lib -lgstnet-1.0 -lgstreamer-1.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GST_OBJCFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_OBJCFLAGS)
+GST_NET_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GST_NET_LIBS = -L/usr/local/lib -lgstnet-1.0 -lgstreamer-1.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0  
+GST_OBJCFLAGS = -I$(top_srcdir)/gst-libs -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include   -DGST_USE_UNSTABLE_API -fno-strict-aliasing  -DG_THREADS_MANDATORY -DG_DISABLE_DEPRECATED $(GST_OPTION_OBJCFLAGS)
 GST_OPTION_CFLAGS = $(WARNING_CFLAGS) $(ERROR_CFLAGS) $(DEBUG_CFLAGS) $(PROFILE_CFLAGS) $(GCOV_CFLAGS) $(OPT_CFLAGS) $(DEPRECATED_CFLAGS)
 GST_OPTION_CXXFLAGS = $(WARNING_CXXFLAGS) $(ERROR_CXXFLAGS) $(DEBUG_CFLAGS) $(PROFILE_CFLAGS) $(GCOV_CFLAGS) $(OPT_CFLAGS) $(DEPRECATED_CFLAGS)
 GST_OPTION_OBJCFLAGS = $(WARNING_OBJCFLAGS) $(ERROR_OBJCFLAGS) $(DEBUG_CFLAGS) $(PROFILE_CFLAGS) $(GCOV_CFLAGS) $(OPT_CFLAGS) $(DEPRECATED_CFLAGS)
@@ -351,9 +352,9 @@ GST_PACKAGE_NAME = GStreamer Good Plug-ins source release
 GST_PACKAGE_ORIGIN = Unknown package origin
 GST_PKG_CONFIG_PATH = $(top_builddir)/pkgconfig
 GST_PLUGINS_ALL =  alpha apetag audiofx audioparsers auparse autodetect avi cutter debugutils deinterlace dtmf effectv equalizer flv flx goom goom2k1 icydemux id3demux imagefreeze interleave isomp4 isommt law level matroska monoscope multifile multipart replaygain rtp rtpmanager rtsp shapewipe smpte spectrum udp videobox videocrop videofilter videomixer wavenc wavparse y4m
-GST_PLUGINS_BASE_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GST_PLUGINS_BASE_CFLAGS = -pthread -I/usr/local/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
 GST_PLUGINS_BASE_DIR = /usr/local/lib/gstreamer-1.0/gst:/usr/local/lib/gstreamer-1.0/sys:/usr/local/lib/gstreamer-1.0/ext
-GST_PLUGINS_BASE_LIBS = -L/usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+GST_PLUGINS_BASE_LIBS = -L/usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0  
 GST_PLUGINS_DIR = /usr/local/lib/gstreamer-1.0
 GST_PLUGINS_NONPORTED = 
 GST_PLUGINS_SELECTED =   alpha apetag audiofx audioparsers auparse autodetect avi cutter debugutils deinterlace dtmf effectv equalizer flv flx goom goom2k1 icydemux id3demux imagefreeze interleave isomp4 isommt law level matroska multifile multipart replaygain rtp rtpmanager rtsp shapewipe smpte spectrum udp videobox videocrop videofilter videomixer wavenc wavparse y4m 
@@ -361,30 +362,30 @@ GST_PLUGIN_LDFLAGS = -module -avoid-version -no-undefined -Wl,-Bsymbolic-functio
 GST_PREFIX = /usr/local
 GST_REVISION = 0
 GST_TOOLS_DIR = /usr/local/bin
-GTK3_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK3_GL_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK3_GL_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GTK3_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GTK3_WAYLAND_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK3_WAYLAND_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GTK3_X11_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK3_X11_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+GTK3_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/pixman-1 -I/usr/include/libpng12  
+GTK3_GL_CFLAGS = 
+GTK3_GL_LIBS = 
+GTK3_LIBS = -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0  
+GTK3_WAYLAND_CFLAGS = 
+GTK3_WAYLAND_LIBS = 
+GTK3_X11_CFLAGS = 
+GTK3_X11_LIBS = 
 GTKDOC_CHECK = /usr/bin/gtkdoc-check
-GTKDOC_DEPS_CFLAGS = 
-GTKDOC_DEPS_LIBS = 
+GTKDOC_DEPS_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include  
+GTKDOC_DEPS_LIBS = -lgobject-2.0 -lglib-2.0  
 GTKDOC_MKPDF = /usr/bin/gtkdoc-mkpdf
 GTKDOC_REBASE = /usr/bin/gtkdoc-rebase
-GTK_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GTK_X11_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/mirclient -I/usr/include/mircore -I/usr/include/mircookie -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GTK_X11_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
-GUDEV_CFLAGS = -I/usr/include/gudev-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-GUDEV_LIBS = -lgudev-1.0 -lgobject-2.0 -lglib-2.0
-HAVE_AVC1394 = yes
+GTK_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/pixman-1 -I/usr/include/libpng12  
+GTK_LIBS = -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0  
+GTK_X11_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/pixman-1 -I/usr/include/libpng12  
+GTK_X11_LIBS = -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0  
+GUDEV_CFLAGS = 
+GUDEV_LIBS = 
+HAVE_AVC1394 = 
 HAVE_CXX = yes
 HAVE_DIRECTSOUND = no
 HAVE_LAME = yes
-HAVE_ROM1394 = yes
+HAVE_ROM1394 = 
 HAVE_ZLIB = yes
 HTML_DIR = ${datadir}/gtk-doc/html
 INSTALL = /usr/bin/install -c
@@ -397,33 +398,33 @@ INTL_MACOSX_LIBS =
 JACK_0_120_1_CFLAGS = 
 JACK_0_120_1_LIBS = 
 JACK_1_9_7_CFLAGS = 
-JACK_1_9_7_LIBS = -ljack
+JACK_1_9_7_LIBS = 
 JACK_CFLAGS = 
-JACK_LIBS = -ljack
+JACK_LIBS = 
 JPEG_LIBS = -ljpeg
 LAME_CFLAGS = -DGSTLAME_PRESET -DHAVE_LAME_SET_VBR_QUALITY
 LAME_LIBS = -lmp3lame -lm
-LD = /usr/bin/ld -m elf_x86_64
+LD = /usr/bin/ld
 LDFLAGS = 
-LIBCACA_CFLAGS = 
-LIBCACA_LIBS = -lcaca
+LIBCACA_CFLAGS =  
+LIBCACA_LIBS = -lcaca  
 LIBDV_CFLAGS = 
-LIBDV_LIBS = -ldv -lm
+LIBDV_LIBS = 
 LIBICONV = -liconv
 LIBIEC61883_CFLAGS = 
-LIBIEC61883_LIBS = -liec61883 -lraw1394
+LIBIEC61883_LIBS = 
 LIBINTL = 
 LIBM = -lm
 LIBOBJS = 
-LIBPNG_1_5_CFLAGS = -I/usr/include/libpng16
-LIBPNG_1_5_LIBS = -lpng16 -lz
-LIBPNG_CFLAGS = -I/usr/include/libpng16
-LIBPNG_LIBS = -lpng16 -lz
+LIBPNG_1_5_CFLAGS = 
+LIBPNG_1_5_LIBS = 
+LIBPNG_CFLAGS = -I/usr/include/libpng12  
+LIBPNG_LIBS = -lpng12  
 LIBRT = 
 LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIBV4L2_CFLAGS = 
-LIBV4L2_LIBS = -lv4l2
+LIBV4L2_CFLAGS =  
+LIBV4L2_LIBS = -lv4l2  
 LIPO = 
 LN_S = ln -s
 LOCALEDIR = /usr/local/share/locale
@@ -431,12 +432,12 @@ LTLIBICONV = -liconv
 LTLIBINTL = 
 LTLIBOBJS = 
 MAINT = 
-MAKEINFO = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/missing makeinfo
+MAKEINFO = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
-MOC = /usr/lib/x86_64-linux-gnu/qt5/bin/moc
+MOC = 
 MPG123_CFLAGS = 
-MPG123_LIBS = -lmpg123
+MPG123_LIBS = 
 MSGFMT = /usr/bin/msgfmt
 MSGFMT_015 = /usr/bin/msgfmt
 MSGMERGE = /usr/bin/msgmerge
@@ -449,8 +450,8 @@ OBJDUMP = objdump
 OBJEXT = o
 ORCC = /usr/local/bin/orcc
 ORCC_FLAGS = --compat 0.4.17
-ORC_CFLAGS = -I/usr/local/include/orc-0.4
-ORC_LIBS = -L/usr/local/lib -lorc-0.4
+ORC_CFLAGS = -I/usr/local/include/orc-0.4  
+ORC_LIBS = -L/usr/local/lib -lorc-0.4  
 OTOOL = 
 OTOOL64 = 
 PACKAGE = gst-plugins-good
@@ -470,11 +471,11 @@ PKG_CONFIG = /usr/bin/pkg-config
 PLUGINDIR = /usr/local/lib/gstreamer-1.0
 POSUB = po
 PROFILE_CFLAGS = -g
-PTHREAD_CC = gcc
+PTHREAD_CC = gcc -std=gnu99
 PTHREAD_CFLAGS = -pthread
 PTHREAD_LIBS = 
-PULSE_CFLAGS = -D_REENTRANT
-PULSE_LIBS = -lpulse
+PULSE_CFLAGS = -D_REENTRANT  
+PULSE_LIBS = -lpulse  
 PYTHON = /usr/bin/python
 PYTHON_EXEC_PREFIX = ${exec_prefix}
 PYTHON_PLATFORM = linux2
@@ -482,70 +483,70 @@ PYTHON_PREFIX = ${prefix}
 PYTHON_VERSION = 2.7
 QT_ANDROID_CFLAGS = 
 QT_ANDROID_LIBS = 
-QT_CFLAGS = -I/usr/include/x86_64-linux-gnu/qt5/QtQuick -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtQml -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtX11Extras -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5
-QT_LIBS = -lQt5Quick -lQt5Gui -lQt5Qml -lQt5Network -lQt5Core -lQt5X11Extras -lQt5Gui -lQt5Core
+QT_CFLAGS = 
+QT_LIBS = 
 QT_MAC_CFLAGS = 
 QT_MAC_LIBS = 
 QT_WAYLAND_CFLAGS = 
 QT_WAYLAND_LIBS = 
-QT_X11_CFLAGS = -I/usr/include/x86_64-linux-gnu/qt5/QtX11Extras -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5
-QT_X11_LIBS = -lQt5X11Extras -lQt5Gui -lQt5Core
+QT_X11_CFLAGS = 
+QT_X11_LIBS = 
 RANLIB = ranlib
-RAW1394_CFLAGS = 
-RAW1394_LIBS = -lraw1394
-RCC = /usr/lib/x86_64-linux-gnu/qt5/bin/rcc
+RAW1394_CFLAGS =  
+RAW1394_LIBS = -lraw1394  
+RCC = 
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
-SHOUT2_CFLAGS = -pthread
-SHOUT2_LIBS = -lshout
-SOUP_CFLAGS = -pthread -I/usr/include/libsoup-2.4 -I/usr/include/libxml2 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
-SOUP_LIBS = -lsoup-2.4 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+SHOUT2_CFLAGS = 
+SHOUT2_LIBS = 
+SOUP_CFLAGS = 
+SOUP_LIBS = 
 SPEEX_CFLAGS = 
-SPEEX_LIBS = -lspeex
+SPEEX_LIBS = 
 STRIP = strip
-TAGLIB_CFLAGS = -I/usr/include/taglib
-TAGLIB_CXXFLAGS = -I/usr/include/taglib -Wno-attributes
-TAGLIB_LIBS = -ltag
+TAGLIB_CFLAGS = 
+TAGLIB_CXXFLAGS =  -Wno-attributes
+TAGLIB_LIBS = 
 TWOLAME_CFLAGS = 
-TWOLAME_LIBS = -ltwolame
-UIC = /usr/lib/x86_64-linux-gnu/qt5/bin/uic
+TWOLAME_LIBS = 
+UIC = 
 USE_NLS = yes
-VALGRIND_CFLAGS = 
-VALGRIND_LIBS = 
-VALGRIND_PATH = no
+VALGRIND_CFLAGS = -I/usr/include/valgrind  
+VALGRIND_LIBS = -L/usr/lib/valgrind -lcoregrind-x86-linux -lvex-x86-linux -lgcc  
+VALGRIND_PATH = /usr/bin/valgrind
 VERSION = 1.13.1
 VISIBILITY_CFLAGS = -fvisibility=hidden
 VISIBILITY_CXXFLAGS = -fvisibility=hidden
 VPX_130_CFLAGS = 
-VPX_130_LIBS = -lvpx -lm
+VPX_130_LIBS = 
 VPX_140_CFLAGS = 
-VPX_140_LIBS = -lvpx -lm
+VPX_140_LIBS = 
 VPX_CFLAGS = 
-VPX_LIBS = -lvpx -lm
+VPX_LIBS = 
 WARNING_CFLAGS =  -Wall -Wdeclaration-after-statement -Wvla -Wpointer-arith -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wwrite-strings -Wold-style-definition -Waggregate-return -Winit-self -Wmissing-include-dirs -Waddress -Wno-multichar -Wnested-externs
 WARNING_CXXFLAGS =  -Wall -Wmissing-declarations -Wredundant-decls -Wwrite-strings -Winit-self -Wmissing-include-dirs -Waddress -Wno-multichar
 WARNING_OBJCFLAGS = 
 WAVPACK_CFLAGS = 
-WAVPACK_LIBS = -lwavpack
-XDAMAGE_CFLAGS = 
-XDAMAGE_LIBS = -lXdamage -lXfixes
-XEXT_CFLAGS = 
-XEXT_LIBS = -lXext
-XFIXES_CFLAGS = 
-XFIXES_LIBS = -lXfixes
+WAVPACK_LIBS = 
+XDAMAGE_CFLAGS =  
+XDAMAGE_LIBS = -lXdamage -lXfixes  
+XEXT_CFLAGS =  
+XEXT_LIBS = -lXext  
+XFIXES_CFLAGS =  
+XFIXES_LIBS = -lXfixes  
 XGETTEXT = /usr/bin/xgettext
 XGETTEXT_015 = /usr/bin/xgettext
 XGETTEXT_EXTRA_OPTIONS = 
-XSHM_CFLAGS = 
-XSHM_LIBS = -lXext
-X_CFLAGS = 
-X_LIBS = -lX11
+XSHM_CFLAGS =  
+XSHM_LIBS = -lXext  
+X_CFLAGS =  
+X_LIBS = -lX11  
 ZLIB_LIBS = -lz
-abs_builddir = /home/gaian/gstreamer/gst-plugins-good-1.13.1/gst/isommt
-abs_srcdir = /home/gaian/gstreamer/gst-plugins-good-1.13.1/gst/isommt
-abs_top_builddir = /home/gaian/gstreamer/gst-plugins-good-1.13.1
-abs_top_srcdir = /home/gaian/gstreamer/gst-plugins-good-1.13.1
+abs_builddir = /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/gst/isommt
+abs_srcdir = /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/gst/isommt
+abs_top_builddir = /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1
+abs_top_srcdir = /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -558,9 +559,9 @@ am__tar = tar --format=ustar -chf - "$$tardir"
 am__untar = tar -xf -
 ax_pthread_config = 
 bindir = ${exec_prefix}/bin
-build = x86_64-pc-linux-gnu
+build = i686-pc-linux-gnu
 build_alias = 
-build_cpu = x86_64
+build_cpu = i686
 build_os = linux-gnu
 build_vendor = pc
 builddir = .
@@ -569,15 +570,15 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = x86_64-pc-linux-gnu
+host = i686-pc-linux-gnu
 host_alias = 
-host_cpu = x86_64
+host_cpu = i686
 host_os = linux-gnu
 host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/gaian/gstreamer/gst-plugins-good-1.13.1/install-sh
+install_sh = ${SHELL} /home/kannan/Downloads/ALP/gstreamer_tool/mmt_gst-plugins-good-1.13.1/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -598,9 +599,9 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
 sysconfdir = ${prefix}/etc
-target = x86_64-pc-linux-gnu
+target = i686-pc-linux-gnu
 target_alias = 
-target_cpu = x86_64
+target_cpu = i686
 target_os = linux-gnu
 target_vendor = pc
 top_build_prefix = ../../
@@ -621,8 +622,8 @@ libgstisommt_la_LIBADD = \
 libgstisommt_la_LDFLAGS = ${GST_PLUGIN_LDFLAGS}
 libgstisommt_la_SOURCES = isommt-plugin.c gstrtpxqtdepay.c \
 	mmtdemux.c mmtdemux_types.c mmtdemux_dump.c mmtdemux_lang.c \
-	gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
-	properties.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
+	gstqtmux.c gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
+	properties.c gstqtmuxmap.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
 
 presetdir = $(datadir)/gstreamer-$(GST_API_VERSION)/presets
 preset_DATA = GstMMTMux.prs
@@ -635,6 +636,7 @@ noinst_HEADERS = \
 	mmtdemux_lang.h   \
 	qtpalette.h      \
 	gstrtpxqtdepay.h \
+	gstqtmux.h       \
 	gstqtmoovrecover.h \
 	atoms.h          \
 	atomsrecovery.h  \
@@ -642,11 +644,14 @@ noinst_HEADERS = \
 	properties.h     \
 	fourcc.h         \
 	gstisoff.h       \
+	gstqtmuxmap.h   \
         MMTTables.h      \
         MMTPacket.h     \
         MMTBitstream.h   
 
 EXTRA_DIST = \
+	gstqtmux-doc.c \
+	gstqtmux-doc.h \
 	$(preset_DATA)
 
 all: all-am
@@ -735,15 +740,17 @@ include ./$(DEPDIR)/libgstisommt_la-atomsrecovery.Plo
 include ./$(DEPDIR)/libgstisommt_la-descriptors.Plo
 include ./$(DEPDIR)/libgstisommt_la-gstisoff.Plo
 include ./$(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Plo
+include ./$(DEPDIR)/libgstisommt_la-gstqtmux.Plo
+include ./$(DEPDIR)/libgstisommt_la-gstqtmuxmap.Plo
 include ./$(DEPDIR)/libgstisommt_la-gstrtpxqtdepay.Plo
 include ./$(DEPDIR)/libgstisommt_la-isommt-plugin.Plo
+include ./$(DEPDIR)/libgstisommt_la-mmtsignal.Plo
+include ./$(DEPDIR)/libgstisommt_la-process_mfu.Plo
+include ./$(DEPDIR)/libgstisommt_la-properties.Plo
 include ./$(DEPDIR)/libgstisommt_la-mmtdemux.Plo
 include ./$(DEPDIR)/libgstisommt_la-mmtdemux_dump.Plo
 include ./$(DEPDIR)/libgstisommt_la-mmtdemux_lang.Plo
 include ./$(DEPDIR)/libgstisommt_la-mmtdemux_types.Plo
-include ./$(DEPDIR)/libgstisommt_la-mmtsignal.Plo
-include ./$(DEPDIR)/libgstisommt_la-process_mfu.Plo
-include ./$(DEPDIR)/libgstisommt_la-properties.Plo
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -811,6 +818,13 @@ libgstisommt_la-mmtdemux_lang.lo: mmtdemux_lang.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-mmtdemux_lang.lo `test -f 'mmtdemux_lang.c' || echo '$(srcdir)/'`mmtdemux_lang.c
 
+libgstisommt_la-gstqtmux.lo: gstqtmux.c
+	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmux.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmux.Tpo -c -o libgstisommt_la-gstqtmux.lo `test -f 'gstqtmux.c' || echo '$(srcdir)/'`gstqtmux.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmux.Tpo $(DEPDIR)/libgstisommt_la-gstqtmux.Plo
+#	$(AM_V_CC)source='gstqtmux.c' object='libgstisommt_la-gstqtmux.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-gstqtmux.lo `test -f 'gstqtmux.c' || echo '$(srcdir)/'`gstqtmux.c
+
 libgstisommt_la-gstqtmoovrecover.lo: gstqtmoovrecover.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmoovrecover.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Tpo -c -o libgstisommt_la-gstqtmoovrecover.lo `test -f 'gstqtmoovrecover.c' || echo '$(srcdir)/'`gstqtmoovrecover.c
 	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Tpo $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Plo
@@ -852,6 +866,13 @@ libgstisommt_la-properties.lo: properties.c
 #	$(AM_V_CC)source='properties.c' object='libgstisommt_la-properties.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-properties.lo `test -f 'properties.c' || echo '$(srcdir)/'`properties.c
+
+libgstisommt_la-gstqtmuxmap.lo: gstqtmuxmap.c
+	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmuxmap.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Tpo -c -o libgstisommt_la-gstqtmuxmap.lo `test -f 'gstqtmuxmap.c' || echo '$(srcdir)/'`gstqtmuxmap.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Tpo $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Plo
+#	$(AM_V_CC)source='gstqtmuxmap.c' object='libgstisommt_la-gstqtmuxmap.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-gstqtmuxmap.lo `test -f 'gstqtmuxmap.c' || echo '$(srcdir)/'`gstqtmuxmap.c
 
 libgstisommt_la-gstisoff.lo: gstisoff.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstisoff.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstisoff.Tpo -c -o libgstisommt_la-gstisoff.lo `test -f 'gstisoff.c' || echo '$(srcdir)/'`gstisoff.c

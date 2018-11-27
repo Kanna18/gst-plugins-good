@@ -1,0 +1,268 @@
+Setting pipeline to PAUSED ...
+Pipeline is live and does not need PREROLL ...
+Setting pipeline to PLAYING ...
+New clock: GstSystemClock
+MMMTTTT...........
+XMLLLLLL...........
+Got context from element 'vaapisink0': gst.vaapi.Display=context, gst.vaapi.Display=(GstVaapiDisplay)"\(GstVaapiDisplayGLX\)\ vaapidisplayglx0";
+Redistribute latency...
+LLLLL================ gbuf pts: 924256021 count:33 
+SSSSSS===================f pts: 166833333 === pts 13211175395187074504 dts 0 sample_number 1 pts offset 166833333
+LLLLL================ gbuf pts: 942534817 count:4 
+SSSSSS===================f pts: 100100000 === pts 927411671 dts 16683333 sample_number 2 pts offset 83416666
+LLLLL================ gbuf pts: 971626646 count:2 
+SSSSSS===================f pts: 66733333 === pts 964567892 dts 33366666 sample_number 3 pts offset 33366666
+MMMMMM================ gbuf pts: 972374938 count:0 
+SSSSSS===================f pts: 50050000 === pts 972374938 dts 50050000 sample_number 4 pts offset 0
+MMMMMM================ gbuf pts: 973173332 count:0 
+SSSSSS===================f pts: 83416666 === pts 973173332 dts 66733333 sample_number 5 pts offset 16683333
+MMMMMM================ gbuf pts: 976594521 count:0 
+SSSSSS===================f pts: 133466666 === pts 976594521 dts 83416666 sample_number 6 pts offset 50050000
+MMMMMM================ gbuf pts: 977237769 count:0 
+SSSSSS===================f pts: 116783333 === pts 977237769 dts 100100000 sample_number 7 pts offset 16683333
+MMMMMM================ gbuf pts: 977602501 count:0 
+SSSSSS===================f pts: 150150000 === pts 977602501 dts 116783333 sample_number 8 pts offset 33366666
+LLLLL================ gbuf pts: 1069983974 count:15 
+SSSSSS===================f pts: 300300000 === pts 981165904 dts 133466666 sample_number 9 pts offset 166833333
+LLLLL================ gbuf pts: 1090331995 count:3 
+SSSSSS===================f pts: 233566666 === pts 1075811536 dts 150150000 sample_number 10 pts offset 83416666
+LLLLL================ gbuf pts: 1116772592 count:2 
+SSSSSS===================f pts: 200200000 === pts 1096548387 dts 166833333 sample_number 11 pts offset 33366666
+MMMMMM================ gbuf pts: 1116834096 count:0 
+SSSSSS===================f pts: 183516666 === pts 1116834096 dts 183516666 sample_number 12 pts offset 0
+MMMMMM================ gbuf pts: 1116857280 count:0 
+SSSSSS===================f pts: 216883333 === pts 1116857280 dts 200200000 sample_number 13 pts offset 16683333
+MMMMMM================ gbuf pts: 1116877532 count:0 
+SSSSSS===================f pts: 266933333 === pts 1116877532 dts 216883333 sample_number 14 pts offset 50050000
+MMMMMM================ gbuf pts: 1116897037 count:0 
+SSSSSS===================f pts: 250250000 === pts 1116897037 dts 233566666 sample_number 15 pts offset 16683333
+MMMMMM================ gbuf pts: 1116921626 count:0 
+SSSSSS===================f pts: 283616666 === pts 1116921626 dts 250250000 sample_number 16 pts offset 33366666
+Got context from element 'playsink': gst.vaapi.Display=context, gst.vaapi.Display=(GstVaapiDisplay)"\(GstVaapiDisplayGLX\)\ vaapidisplayglx0";
+Redistribute latency...
+Redistribute latency...
+LLLLL================ gbuf pts: 1188313096 count:12 
+SSSSSS===================f pts: 433766666 === pts 1116952567 dts 266933333 sample_number 17 pts offset 166833333
+LLLLL================ gbuf pts: 1214068143 count:4 
+SSSSSS===================f pts: 367033333 === pts 1191973366 dts 283616666 sample_number 18 pts offset 83416666
+LLLLL================ gbuf pts: 1216280189 count:2 
+SSSSSS===================f pts: 333666666 === pts 1214261937 dts 300300000 sample_number 19 pts offset 33366666
+MMMMMM================ gbuf pts: 1218256366 count:0 
+SSSSSS===================f pts: 316983333 === pts 1218256366 dts 316983333 sample_number 20 pts offset 0
+MMMMMM================ gbuf pts: 1218360321 count:0 
+SSSSSS===================f pts: 350350000 === pts 1218360321 dts 333666666 sample_number 21 pts offset 16683333
+LLLLL================ gbuf pts: 1233881561 count:2 
+SSSSSS===================f pts: 400400000 === pts 1221475256 dts 350350000 sample_number 22 pts offset 50050000
+MMMMMM================ gbuf pts: 1235455251 count:0 
+SSSSSS===================f pts: 383716666 === pts 1235455251 dts 367033333 sample_number 23 pts offset 16683333
+MMMMMM================ gbuf pts: 1235752687 count:0 
+SSSSSS===================f pts: 417083333 === pts 1235752687 dts 383716666 sample_number 24 pts offset 33366666
+LLLLL================ gbuf pts: 1293967783 count:9 
+SSSSSS===================f pts: 567233333 === pts 1239179305 dts 400400000 sample_number 25 pts offset 166833333
+LLLLL================ gbuf pts: 1308601545 count:3 
+SSSSSS===================f pts: 500500000 === pts 1298789359 dts 417083333 sample_number 26 pts offset 83416666
+MMMMMM================ gbuf pts: 1310362953 count:0 
+SSSSSS===================f pts: 467133333 === pts 1310362953 dts 433766666 sample_number 27 pts offset 33366666
+MMMMMM================ gbuf pts: 1310452625 count:0 
+SSSSSS===================f pts: 450450000 === pts 1310452625 dts 450450000 sample_number 28 pts offset 0
+MMMMMM================ gbuf pts: 1313136138 count:0 
+SSSSSS===================f pts: 483816666 === pts 1313136138 dts 467133333 sample_number 29 pts offset 16683333
+LLLLL================ gbuf pts: 1322751279 count:2 
+SSSSSS===================f pts: 533866666 === pts 1315793499 dts 483816666 sample_number 30 pts offset 50050000
+MMMMMM================ gbuf pts: 1323452267 count:0 
+SSSSSS===================f pts: 517183333 === pts 1323452267 dts 500500000 sample_number 31 pts offset 16683333
+MMMMMM================ gbuf pts: 1323963840 count:0 
+SSSSSS===================f pts: 550550000 === pts 1323963840 dts 517183333 sample_number 32 pts offset 33366666
+LLLLL================ gbuf pts: 1387356253 count:9 
+SSSSSS===================f pts: 700700000 === pts 1329022007 dts 533866666 sample_number 33 pts offset 166833333
+LLLLL================ gbuf pts: 1404244195 count:3 
+SSSSSS===================f pts: 633966666 === pts 1392426635 dts 550550000 sample_number 34 pts offset 83416666
+MMMMMM================ gbuf pts: 1406305942 count:0 
+SSSSSS===================f pts: 600600000 === pts 1406305942 dts 567233333 sample_number 35 pts offset 33366666
+MMMMMM================ gbuf pts: 1408545228 count:0 
+SSSSSS===================f pts: 583916666 === pts 1408545228 dts 583916666 sample_number 36 pts offset 0
+MMMMMM================ gbuf pts: 1408660306 count:0 
+SSSSSS===================f pts: 617283333 === pts 1408660306 dts 600600000 sample_number 37 pts offset 16683333
+LLLLL================ gbuf pts: 1417303857 count:1 
+SSSSSS===================f pts: 667333333 === pts 1413715859 dts 617283333 sample_number 38 pts offset 50050000
+MMMMMM================ gbuf pts: 1420090165 count:0 
+SSSSSS===================f pts: 650650000 === pts 1420090165 dts 633966666 sample_number 39 pts offset 16683333
+MMMMMM================ gbuf pts: 1420182681 count:0 
+SSSSSS===================f pts: 684016666 === pts 1420182681 dts 650650000 sample_number 40 pts offset 33366666
+LLLLL================ gbuf pts: 1475381844 count:9 
+SSSSSS===================f pts: 834166666 === pts 1422331715 dts 667333333 sample_number 41 pts offset 166833333
+LLLLL================ gbuf pts: 1504645313 count:3 
+SSSSSS===================f pts: 767433333 === pts 1479002239 dts 684016666 sample_number 42 pts offset 83416666
+LLLLL================ gbuf pts: 1513945806 count:2 
+SSSSSS===================f pts: 734066666 === pts 1507841728 dts 700700000 sample_number 43 pts offset 33366666
+MMMMMM================ gbuf pts: 1514044502 count:0 
+SSSSSS===================f pts: 717383333 === pts 1514044502 dts 717383333 sample_number 44 pts offset 0
+MMMMMM================ gbuf pts: 1517820879 count:0 
+SSSSSS===================f pts: 750750000 === pts 1517820879 dts 734066666 sample_number 45 pts offset 16683333
+MMMMMM================ gbuf pts: 1520454387 count:0 
+SSSSSS===================f pts: 800800000 === pts 1520454387 dts 750750000 sample_number 46 pts offset 50050000
+MMMMMM================ gbuf pts: 1521772035 count:0 
+SSSSSS===================f pts: 784116666 === pts 1521772035 dts 767433333 sample_number 47 pts offset 16683333
+MMMMMM================ gbuf pts: 1522505938 count:0 
+SSSSSS===================f pts: 817483333 === pts 1522505938 dts 784116666 sample_number 48 pts offset 33366666
+LLLLL================ gbuf pts: 1589515443 count:11 
+SSSSSS===================f pts: 967633333 === pts 1526109309 dts 800800000 sample_number 49 pts offset 166833333
+LLLLL================ gbuf pts: 1622251976 count:3 
+SSSSSS===================f pts: 900900000 === pts 1594172330 dts 817483333 sample_number 50 pts offset 83416666
+LLLLL================ gbuf pts: 1634185538 count:2 
+SSSSSS===================f pts: 867533333 === pts 1627394957 dts 834166666 sample_number 51 pts offset 33366666
+MMMMMM================ gbuf pts: 1635732134 count:0 
+SSSSSS===================f pts: 850850000 === pts 1635732134 dts 850850000 sample_number 52 pts offset 0
+MMMMMM================ gbuf pts: 1636265255 count:0 
+SSSSSS===================f pts: 884216666 === pts 1636265255 dts 867533333 sample_number 53 pts offset 16683333
+MMMMMM================ gbuf pts: 1638179131 count:0 
+SSSSSS===================f pts: 934266666 === pts 1638179131 dts 884216666 sample_number 54 pts offset 50050000
+MMMMMM================ gbuf pts: 1638298906 count:0 
+SSSSSS===================f pts: 917583333 === pts 1638298906 dts 900900000 sample_number 55 pts offset 16683333
+MMMMMM================ gbuf pts: 1638492365 count:0 
+SSSSSS===================f pts: 950950000 === pts 1638492365 dts 917583333 sample_number 56 pts offset 33366666
+LLLLL================ gbuf pts: 1865760015 count:39 
+SSSSSS===================f pts: 1101100000 === pts 1645653010 dts 934266666 sample_number 1 pts offset 166833333
+LLLLL================ gbuf pts: 1881634331 count:3 
+SSSSSS===================f pts: 1034366666 === pts 13211175395187127040 dts 950950000 sample_number 2 pts offset 83416666
+LLLLL================ gbuf pts: 1897690670 count:1 
+SSSSSS===================f pts: 1001000000 === pts 1892382289 dts 967633333 sample_number 3 pts offset 33366666
+MMMMMM================ gbuf pts: 1898086019 count:0 
+SSSSSS===================f pts: 984316666 === pts 1898086019 dts 984316666 sample_number 4 pts offset 0
+MMMMMM================ gbuf pts: 1898425500 count:0 
+SSSSSS===================f pts: 1017683333 === pts 1898425500 dts 1001000000 sample_number 5 pts offset 16683333
+LLLLL================ gbuf pts: 1906971043 count:1 
+SSSSSS===================f pts: 1067733333 === pts 1900793540 dts 1017683333 sample_number 6 pts offset 50050000
+MMMMMM================ gbuf pts: 1907587914 count:0 
+SSSSSS===================f pts: 1051050000 === pts 1907587914 dts 1034366666 sample_number 7 pts offset 16683333
+MMMMMM================ gbuf pts: 1909089262 count:0 
+SSSSSS===================f pts: 1084416666 === pts 1909089262 dts 1051050000 sample_number 8 pts offset 33366666
+LLLLL================ gbuf pts: 1990239043 count:12 
+SSSSSS===================f pts: 1234566666 === pts 1912306223 dts 1067733333 sample_number 9 pts offset 166833333
+LLLLL================ gbuf pts: 2004097589 count:3 
+SSSSSS===================f pts: 1167833333 === pts 1992315536 dts 1084416666 sample_number 10 pts offset 83416666
+MMMMMM================ gbuf pts: 2004577820 count:0 
+SSSSSS===================f pts: 1134466666 === pts 2004577820 dts 1101100000 sample_number 11 pts offset 33366666
+MMMMMM================ gbuf pts: 2005278908 count:0 
+SSSSSS===================f pts: 1117783333 === pts 2005278908 dts 1117783333 sample_number 12 pts offset 0
+MMMMMM================ gbuf pts: 2007659880 count:0 
+SSSSSS===================f pts: 1151150000 === pts 2007659880 dts 1134466666 sample_number 13 pts offset 16683333
+LLLLL================ gbuf pts: 2016001749 count:1 
+SSSSSS===================f pts: 1201200000 === pts 2011719478 dts 1151150000 sample_number 14 pts offset 50050000
+MMMMMM================ gbuf pts: 2017602680 count:0 
+SSSSSS===================f pts: 1184516666 === pts 2017602680 dts 1167833333 sample_number 15 pts offset 16683333
+MMMMMM================ gbuf pts: 2018264746 count:0 
+SSSSSS===================f pts: 1217883333 === pts 2018264746 dts 1184516666 sample_number 16 pts offset 33366666
+LLLLL================ gbuf pts: 2079892145 count:10 
+SSSSSS===================f pts: 1368033333 === pts 2022507353 dts 1201200000 sample_number 17 pts offset 166833333
+LLLLL================ gbuf pts: 2112639154 count:3 
+SSSSSS===================f pts: 1301300000 === pts 2083344031 dts 1217883333 sample_number 18 pts offset 83416666
+MMMMMM================ gbuf pts: 2117283628 count:0 
+SSSSSS===================f pts: 1267933333 === pts 2117283628 dts 1234566666 sample_number 19 pts offset 33366666
+MMMMMM================ gbuf pts: 2117487711 count:0 
+SSSSSS===================f pts: 1251250000 === pts 2117487711 dts 1251250000 sample_number 20 pts offset 0
+MMMMMM================ gbuf pts: 2118616632 count:0 
+SSSSSS===================f pts: 1284616666 === pts 2118616632 dts 1267933333 sample_number 21 pts offset 16683333
+LLLLL================ gbuf pts: 2127022942 count:2 
+SSSSSS===================f pts: 1334666666 === pts 2120962220 dts 1284616666 sample_number 22 pts offset 50050000
+MMMMMM================ gbuf pts: 2128493966 count:0 
+SSSSSS===================f pts: 1317983333 === pts 2128493966 dts 1301300000 sample_number 23 pts offset 16683333
+MMMMMM================ gbuf pts: 2129251774 count:0 
+SSSSSS===================f pts: 1351350000 === pts 2129251774 dts 1317983333 sample_number 24 pts offset 33366666
+LLLLL================ gbuf pts: 2190268026 count:11 
+SSSSSS===================f pts: 1501500000 === pts 2133140870 dts 1334666666 sample_number 25 pts offset 166833333
+LLLLL================ gbuf pts: 2213881582 count:3 
+SSSSSS===================f pts: 1434766666 === pts 2202964036 dts 1351350000 sample_number 26 pts offset 83416666
+LLLLL================ gbuf pts: 2231509887 count:1 
+SSSSSS===================f pts: 1401400000 === pts 2217335008 dts 1368033333 sample_number 27 pts offset 33366666
+MMMMMM================ gbuf pts: 2232709105 count:0 
+SSSSSS===================f pts: 1384716666 === pts 2232709105 dts 1384716666 sample_number 28 pts offset 0
+MMMMMM================ gbuf pts: 2235363313 count:0 
+SSSSSS===================f pts: 1418083333 === pts 2235363313 dts 1401400000 sample_number 29 pts offset 16683333
+MMMMMM================ gbuf pts: 2236474230 count:0 
+SSSSSS===================f pts: 1468133333 === pts 2236474230 dts 1418083333 sample_number 30 pts offset 50050000
+MMMMMM================ gbuf pts: 2237599513 count:0 
+SSSSSS===================f pts: 1451450000 === pts 2237599513 dts 1434766666 sample_number 31 pts offset 16683333
+MMMMMM================ gbuf pts: 2237992950 count:0 
+SSSSSS===================f pts: 1484816666 === pts 2237992950 dts 1451450000 sample_number 32 pts offset 33366666
+LLLLL================ gbuf pts: 2301273407 count:11 
+SSSSSS===================f pts: 1634966666 === pts 2240682491 dts 1468133333 sample_number 33 pts offset 166833333
+LLLLL================ gbuf pts: 2318279102 count:3 
+SSSSSS===================f pts: 1568233333 === pts 2305382464 dts 1484816666 sample_number 34 pts offset 83416666
+LLLLL================ gbuf pts: 2325907344 count:1 
+SSSSSS===================f pts: 1534866666 === pts 2321772839 dts 1501500000 sample_number 35 pts offset 33366666
+MMMMMM================ gbuf pts: 2327063965 count:0 
+SSSSSS===================f pts: 1518183333 === pts 2327063965 dts 1518183333 sample_number 36 pts offset 0
+MMMMMM================ gbuf pts: 2327301902 count:0 
+SSSSSS===================f pts: 1551550000 === pts 2327301902 dts 1534866666 sample_number 37 pts offset 16683333
+MMMMMM================ gbuf pts: 2341580763 count:0 
+SSSSSS===================f pts: 1601600000 === pts 2341580763 dts 1551550000 sample_number 38 pts offset 50050000
+MMMMMM================ gbuf pts: 2341974958 count:0 
+SSSSSS===================f pts: 1584916666 === pts 2341974958 dts 1568233333 sample_number 39 pts offset 16683333
+MMMMMM================ gbuf pts: 2342135752 count:0 
+SSSSSS===================f pts: 1618283333 === pts 2342135752 dts 1584916666 sample_number 40 pts offset 33366666
+LLLLL================ gbuf pts: 2426294203 count:14 
+SSSSSS===================f pts: 1768433333 === pts 13211175395187114232 dts 1601600000 sample_number 41 pts offset 166833333
+LLLLL================ gbuf pts: 2446175517 count:4 
+SSSSSS===================f pts: 1701700000 === pts 2431371805 dts 1618283333 sample_number 42 pts offset 83416666
+LLLLL================ gbuf pts: 2471178860 count:1 
+SSSSSS===================f pts: 1668333333 === pts 2450085842 dts 1634966666 sample_number 43 pts offset 33366666
+MMMMMM================ gbuf pts: 2471444334 count:0 
+SSSSSS===================f pts: 1651650000 === pts 2471444334 dts 1651650000 sample_number 44 pts offset 0
+MMMMMM================ gbuf pts: 2471699695 count:0 
+SSSSSS===================f pts: 1685016666 === pts 2471699695 dts 1668333333 sample_number 45 pts offset 16683333
+LLLLL================ gbuf pts: 2478504914 count:1 
+SSSSSS===================f pts: 1735066666 === pts 2473904073 dts 1685016666 sample_number 46 pts offset 50050000
+MMMMMM================ gbuf pts: 2480212230 count:0 
+SSSSSS===================f pts: 1718383333 === pts 2480212230 dts 1701700000 sample_number 47 pts offset 16683333
+MMMMMM================ gbuf pts: 2480397404 count:0 
+SSSSSS===================f pts: 1751750000 === pts 2480397404 dts 1718383333 sample_number 48 pts offset 33366666
+LLLLL================ gbuf pts: 2539441191 count:10 
+SSSSSS===================f pts: 1901900000 === pts 13211175395187151432 dts 1735066666 sample_number 49 pts offset 166833333
+LLLLL================ gbuf pts: 2551059414 count:3 
+SSSSSS===================f pts: 1835166666 === pts 2541564740 dts 1751750000 sample_number 50 pts offset 83416666
+MMMMMM================ gbuf pts: 2554104446 count:0 
+SSSSSS===================f pts: 1801800000 === pts 2554104446 dts 1768433333 sample_number 51 pts offset 33366666
+MMMMMM================ gbuf pts: 2554324236 count:0 
+SSSSSS===================f pts: 1785116666 === pts 2554324236 dts 1785116666 sample_number 52 pts offset 0
+MMMMMM================ gbuf pts: 2554591572 count:0 
+SSSSSS===================f pts: 1818483333 === pts 2554591572 dts 1801800000 sample_number 53 pts offset 16683333
+LLLLL================ gbuf pts: 2563867742 count:1 
+SSSSSS===================f pts: 1868533333 === pts 2559847230 dts 1818483333 sample_number 54 pts offset 50050000
+MMMMMM================ gbuf pts: 2564588547 count:0 
+SSSSSS===================f pts: 1851850000 === pts 2564588547 dts 1835166666 sample_number 55 pts offset 16683333
+MMMMMM================ gbuf pts: 2564810891 count:0 
+SSSSSS===================f pts: 1885216666 === pts 2564810891 dts 1851850000 sample_number 56 pts offset 33366666
+LLLLL================ gbuf pts: 2794535447 count:38 
+SSSSSS===================f pts: 2035366666 === pts 2575792182 dts 1868533333 sample_number 1 pts offset 166833333
+LLLLL================ gbuf pts: 2822341502 count:3 
+SSSSSS===================f pts: 1968633333 === pts 2811920907 dts 1885216666 sample_number 2 pts offset 83416666
+MMMMMM================ gbuf pts: 2824725899 count:0 
+SSSSSS===================f pts: 1935266666 === pts 2824725899 dts 1901900000 sample_number 3 pts offset 33366666
+MMMMMM================ gbuf pts: 2825421184 count:0 
+SSSSSS===================f pts: 1918583333 === pts 2825421184 dts 1918583333 sample_number 4 pts offset 0
+MMMMMM================ gbuf pts: 2826563402 count:0 
+SSSSSS===================f pts: 1951950000 === pts 2826563402 dts 1935266666 sample_number 5 pts offset 16683333
+LLLLL================ gbuf pts: 2834489859 count:1 
+SSSSSS===================f pts: 2002000000 === pts 2830642775 dts 1951950000 sample_number 6 pts offset 50050000
+MMMMMM================ gbuf pts: 2835627256 count:0 
+SSSSSS===================f pts: 1985316666 === pts 2835627256 dts 1968633333 sample_number 7 pts offset 16683333
+MMMMMM================ gbuf pts: 2835774442 count:0 
+SSSSSS===================f pts: 2018683333 === pts 2835774442 dts 1985316666 sample_number 8 pts offset 33366666
+LLLLL================ gbuf pts: 2897830428 count:10 
+SSSSSS===================f pts: 2168833333 === pts 13211175395187127040 dts 2002000000 sample_number 9 pts offset 166833333
+handling interrupt.
+Interrupt: Stopping pipeline ...
+Execution ended after 0:00:02.918135551
+Setting pipeline to PAUSED ...
+LLLLL================ gbuf pts: 2926088379 count:3 
+SSSSSS===================f pts: 2102100000 === pts 2901865925 dts 2018683333 sample_number 10 pts offset 83416666
+LLLLL================ gbuf pts: 2933740006 count:1 
+SSSSSS===================f pts: 2068733333 === pts 2930188387 dts 2035366666 sample_number 11 pts offset 33366666
+MMMMMM================ gbuf pts: 2933924203 count:0 
+SSSSSS===================f pts: 2052050000 === pts 2933924203 dts 2052050000 sample_number 12 pts offset 0
+MMMMMM================ gbuf pts: 2934491986 count:0 
+SSSSSS===================f pts: 2085416666 === pts 2934491986 dts 2068733333 sample_number 13 pts offset 16683333
+Setting pipeline to READY ...
+Setting pipeline to NULL ...
+Freeing pipeline ...

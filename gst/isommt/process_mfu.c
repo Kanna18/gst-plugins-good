@@ -26,8 +26,8 @@ void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int med
 	static int need_data[NUM_OF_STREAM], sample_size[NUM_OF_STREAM], count[NUM_OF_STREAM], sample_number[NUM_OF_STREAM];
 	static unsigned int rem_size[NUM_OF_STREAM];
 	static GstBuffer *databuffer;
-	GstBuffer *mfu_buf;
-	mfu_buf = NULL;
+	GstClockTime pts[2], dts[2];
+	GstBuffer *mfu_buf = NULL;
 	is_muli = offset = mfu_offset = 0;
 	mmtdemux->mfu_offset = 0;
 	for(i = 0; i < size; ++i)
@@ -59,14 +59,13 @@ void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int med
 		mmtdemux->ref_offset +=mfu_offset;
 		if(gbuf)
 		{
-			mfu_buf = gst_buffer_copy_region (gbuf, GST_BUFFER_COPY_ALL, mfu_offset+22, rem_size[mediaType]);
-			mfu_buf->pts = gbuf->pts;
-			mfu_buf->dts = gbuf->dts;
-			mfu_buf->duration = gbuf->duration;
+		   pts[mediaType] = gbuf->pts;
+		   dts[mediaType] = gbuf->dts;
+		  //skip 22 bytes of header from sample
+			gst_buffer_resize(gbuf, mfu_offset+22, rem_size[mediaType]);
 		}
 		else
 		{
-			//GST_DEBUG_OBJECT(mmtdemux, "ELEMENTARY STREAM START: %x, size %d", (int)mmtdemux->ref_offset, rem_size[mediaType]);
 			gst_mmtdemux_pull_atom (mmtdemux, mmtdemux->ref_offset, rem_size[mediaType], &mfu_buf);
 		}
 	}
@@ -79,10 +78,10 @@ void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int med
 		}
 		if(gbuf)
 		{
-			mfu_buf = gst_buffer_copy_region (gbuf, GST_BUFFER_COPY_ALL, 14+22, size-14);
-			mfu_buf->pts = gbuf->pts;
-			mfu_buf->dts = gbuf->dts;
-			mfu_buf->duration = gbuf->duration;
+		  //skip 14byte extra in samole packet & 22 bytes of header
+			gst_buffer_resize(gbuf, 14+22, size-14);
+		   //if(!mediaType && gbuf)
+			//	fprintf(stderr, "LLLLL================ gbuf pts: %"G_GUINT64_FORMAT" count:%d \n", gbuf->pts, count[mediaType]);
 		}
 		else
 		{
@@ -102,21 +101,35 @@ void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int med
 			}
 		}
 		if(databuffer == NULL)
-			databuffer = mfu_buf;
+		{
+			databuffer = (gbuf != NULL?gbuf:mfu_buf);
+		}
 		else
-			databuffer = gst_buffer_append(databuffer, mfu_buf);
+		{
+			databuffer = gst_buffer_append(databuffer, gbuf != NULL?gbuf:mfu_buf);
+		}
 
 		if(!is_muli)
 			rem_size[mediaType] +=(size-14);	 
 
 		GST_DEBUG_OBJECT(mmtdemux," SIZEEEE %d :: mfu_b.length: %d count:%d", rem_size[mediaType], sample_size[mediaType], count[mediaType]);
+		//fprintf(stderr," SIZEEEE %d :: mfu_b.length: %d count:%d\n", rem_size[mediaType], sample_size[mediaType], count[mediaType]);
 		if(rem_size[mediaType] == sample_size[mediaType])
 		{
 			GST_DEBUG_OBJECT(mmtdemux," UUUUSIZE %d :: mfu_b.length: %d..................... count:%d sample_number: %d", rem_size[mediaType], sample_size[mediaType], count[mediaType], sample_number[mediaType]);
 
+			//databuffer->dts = dts[mediaType];
+	//		if(gbuf)
+	//			fprintf(stderr, "MMMMMMM================ gbuf pts: %"G_GUINT64_FORMAT" pts:%"G_GUINT64_FORMAT" dts: %"G_GUINT64_FORMAT"\n", gbuf->pts, databuffer->pts, databuffer->dts);
+		   //databuffer->pts=pts[mediaType];
+		   if(gbuf)
+			{
+				fprintf(stderr, "LLLLL================ gbuf pts: %"G_GUINT64_FORMAT" count:%d \n", gbuf->pts, count[mediaType]);
+				databuffer->pts=pts[mediaType];
+				databuffer->dts=dts[mediaType];
+			}
 			gst_mmtdemux_state_movie(mmtdemux, databuffer, 0, mediaType, sample_number[mediaType]);
 			need_data[mediaType] = 0;
-			//gst_buffer_unref (databuffer);
 			databuffer = NULL;
 		}
 		else if(rem_size[mediaType] > sample_size[mediaType])
@@ -129,12 +142,24 @@ void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int med
 	}
 	else if (is_muli && (rem_size[mediaType] == mfu_b.length))
 	{
-		gst_mmtdemux_state_movie(mmtdemux, mfu_buf, (guint64 )mfu_b.offset, mediaType, mfu_b.samplenumber);
+		//fprintf (stderr,"STATE_MOVIE rendering... \n");
+		   if(!mediaType && gbuf)
+				fprintf(stderr, "MMMMMM================ gbuf pts: %"G_GUINT64_FORMAT" count:%d \n", gbuf->pts, count[mediaType]);
+		gst_mmtdemux_state_movie(mmtdemux, gbuf != NULL?gbuf:mfu_buf, (guint64 )mfu_b.offset, mediaType, mfu_b.samplenumber);
 	}
 	else
 	{
 		GST_DEBUG_OBJECT (mmtdemux,"no mfu header found, skipping rendering... ");
-		//gst_mmtdemux_state_movie(mmtdemux, mfu_buf, size, mediaType);
+		fprintf (stderr,"no mfu header found, skipping rendering...\n");
+		if(gbuf) 
+			gst_buffer_unref (gbuf);
+		if(mfu_buf)
+			gst_buffer_unref (mfu_buf);
+		if(databuffer) 
+		{
+			gst_buffer_unref (databuffer);
+			databuffer = NULL;
+		}
 	}
 }
 
@@ -195,6 +220,57 @@ int pullatom(unsigned char *data, char *buf)
     return length;
 }
 
+int process_moof_data(GstMMTDemux * mmtdemux, unsigned char *buf,int size)
+{
+   int length;
+   static unsigned char Data[MAX_SIZE];
+   static int tempsize;
+   static int offset = 0;
+   char boxType[4] = {"0"};
+   GST_DEBUG_OBJECT (mmtdemux, "KKKKKKKKKKK %s size: %d \n", __func__, size);
+   memcpy(Data+offset,buf,size);
+   size += tempsize;
+   tempsize = size;
+#if 0
+   while(localOffset<size)
+   {
+      length = pullatom(Data+localOffset, boxType);
+      if(length > (size-localOffset) )
+         goto DataInSufficient;  // 0  for insufficient data
+      else if(length <= 0)
+         goto reset_buf;  // 0  for insufficient data
+      if(!strncmp(boxType,"moof",4))
+      {
+			  mmtdemux_parse_moof (mmtdemux, Data+localOffset, length, mmtdemux->moof_offset, NULL);
+      }
+      localOffset+=length;
+   }
+#else
+      length = pullatom(Data, boxType);
+      if(length > size)
+         goto DataInSufficient;  // 0  for insufficient data
+      else if(length <= 0)
+         goto reset_buf;  // 0  for insufficient data
+		 mmtdemux_parse_moof (mmtdemux, Data, length, mmtdemux->moof_offset, NULL);
+#endif
+
+reset_buf:
+   tempsize = 0;
+   offset = 0;
+   memset(Data, '\0', sizeof(Data));
+   return 1;
+DataInSufficient:
+   GST_DEBUG_OBJECT(mmtdemux," MOSS: Insufficient data, required length: %d, available: %d\n", length, size);
+   if(length > 4096)
+	{
+		tempsize = 0;
+		offset = 0;
+	   return 0;
+	}
+   offset+=size;
+   return 0;
+}
+
 int process_init_data(GstMMTDemux * mmtdemux, unsigned char *buf,int size)
 {
    int length;
@@ -253,41 +329,54 @@ int GainMMTdemux(GstMMTDemux * mmtdemux, unsigned char *buf,int size,int DataTyp
 	static short init_videoSeg, moof_videoSeg;
 	GST_DEBUG_OBJECT (mmtdemux, "FCHECK %s size: %d DataType: %d, mediaType:%s total stream:%d\n", __func__, size, DataType, mediaType==1?"audio":"video", mmtdemux->n_streams);
 	if(!init_videoSeg && !mediaType && !DataType)
-			init_videoSeg = !init_videoSeg;
+		init_videoSeg = !init_videoSeg;
 	else if(!moof_videoSeg && !mediaType && (DataType == MOOF_DATA))
-		  moof_videoSeg = !moof_videoSeg;
+		moof_videoSeg = !moof_videoSeg;
 
-   if(!init_videoSeg)
-		 return -1;
+	if(!init_videoSeg)
+		goto exit_on_error;
 
+	mmtdemux->mediaType=mediaType;
 	switch(DataType)
 	{
 		case INIT_DATA:
 			{
-				if(!mmtdemux->got_moov)
-					 process_init_data(mmtdemux, buf, size);
-				break;
+				if(mmtdemux->n_streams < 2)
+					process_init_data(mmtdemux, buf, size);
+				goto exit_on_success;
 			}
 		case MOOF_DATA:
 			{
 				if(!moof_videoSeg && !mediaType)
-					 moof_videoSeg = !moof_videoSeg;
-		      if(!moof_videoSeg)
-					 return -1;
-			   mmtdemux_parse_moof (mmtdemux, buf, size, mmtdemux->moof_offset, NULL);
+					moof_videoSeg = !moof_videoSeg;
+				if(!moof_videoSeg)
+					goto exit_on_error;
+				process_moof_data(mmtdemux, buf, size);
 				if((mmtdemux->exposed == FALSE) && (mediaType == 1) && (mmtdemux->n_streams == 2))
 				{
-						mmtdemux_prepare_streams (mmtdemux);
-						mmtdemux_expose_streams (mmtdemux);
+					mmtdemux_prepare_streams (mmtdemux);
+					mmtdemux_expose_streams (mmtdemux);
 				}
-				break;
+				goto exit_on_success;
 			}
 		case MFU_DATA:
 			{
 				if(mmtdemux->exposed == TRUE)
-					 process_mfus(mmtdemux, buf, size, mediaType, gbuf);
+					process_mfus(mmtdemux, buf, size, mediaType, gbuf);
+				else
+					goto exit_on_success;
 				break;
 			}
+		default:
+			goto exit_on_error;
 	}
 	return 1;
+exit_on_success:
+	if(gbuf)
+		gst_buffer_unref (gbuf);
+	return 1;
+exit_on_error:
+	if(gbuf)
+		gst_buffer_unref (gbuf);
+	return -1;
 }

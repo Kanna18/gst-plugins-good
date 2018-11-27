@@ -161,13 +161,14 @@ am_libgstisommt_la_OBJECTS = libgstisommt_la-isommt-plugin.lo \
 	libgstisommt_la-gstrtpxqtdepay.lo libgstisommt_la-mmtdemux.lo \
 	libgstisommt_la-mmtdemux_types.lo \
 	libgstisommt_la-mmtdemux_dump.lo \
-	libgstisommt_la-mmtdemux_lang.lo \
+	libgstisommt_la-mmtdemux_lang.lo libgstisommt_la-gstqtmux.lo \
 	libgstisommt_la-gstqtmoovrecover.lo libgstisommt_la-atoms.lo \
 	libgstisommt_la-MMTBitstream.lo \
 	libgstisommt_la-atomsrecovery.lo \
 	libgstisommt_la-descriptors.lo libgstisommt_la-properties.lo \
-	libgstisommt_la-gstisoff.lo libgstisommt_la-MMTPacket.lo \
-	libgstisommt_la-mmtsignal.lo libgstisommt_la-process_mfu.lo
+	libgstisommt_la-gstqtmuxmap.lo libgstisommt_la-gstisoff.lo \
+	libgstisommt_la-MMTPacket.lo libgstisommt_la-mmtsignal.lo \
+	libgstisommt_la-process_mfu.lo
 libgstisommt_la_OBJECTS = $(am_libgstisommt_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -621,8 +622,8 @@ libgstisommt_la_LIBADD = \
 libgstisommt_la_LDFLAGS = ${GST_PLUGIN_LDFLAGS}
 libgstisommt_la_SOURCES = isommt-plugin.c gstrtpxqtdepay.c \
 	mmtdemux.c mmtdemux_types.c mmtdemux_dump.c mmtdemux_lang.c \
-	gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
-	properties.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
+	gstqtmux.c gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
+	properties.c gstqtmuxmap.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
 
 presetdir = $(datadir)/gstreamer-$(GST_API_VERSION)/presets
 preset_DATA = GstMMTMux.prs
@@ -635,6 +636,7 @@ noinst_HEADERS = \
 	mmtdemux_lang.h   \
 	qtpalette.h      \
 	gstrtpxqtdepay.h \
+	gstqtmux.h       \
 	gstqtmoovrecover.h \
 	atoms.h          \
 	atomsrecovery.h  \
@@ -642,11 +644,14 @@ noinst_HEADERS = \
 	properties.h     \
 	fourcc.h         \
 	gstisoff.h       \
+	gstqtmuxmap.h   \
         MMTTables.h      \
         MMTPacket.h     \
         MMTBitstream.h   
 
 EXTRA_DIST = \
+	gstqtmux-doc.c \
+	gstqtmux-doc.h \
 	$(preset_DATA)
 
 all: all-am
@@ -735,15 +740,17 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-descriptors.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-gstisoff.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-gstqtmux.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-gstqtmuxmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-gstrtpxqtdepay.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-isommt-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtsignal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-process_mfu.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-properties.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtdemux.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtdemux_dump.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtdemux_lang.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtdemux_types.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-mmtsignal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-process_mfu.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstisommt_la-properties.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -811,6 +818,13 @@ libgstisommt_la-mmtdemux_lang.lo: mmtdemux_lang.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-mmtdemux_lang.lo `test -f 'mmtdemux_lang.c' || echo '$(srcdir)/'`mmtdemux_lang.c
 
+libgstisommt_la-gstqtmux.lo: gstqtmux.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmux.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmux.Tpo -c -o libgstisommt_la-gstqtmux.lo `test -f 'gstqtmux.c' || echo '$(srcdir)/'`gstqtmux.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmux.Tpo $(DEPDIR)/libgstisommt_la-gstqtmux.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstqtmux.c' object='libgstisommt_la-gstqtmux.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-gstqtmux.lo `test -f 'gstqtmux.c' || echo '$(srcdir)/'`gstqtmux.c
+
 libgstisommt_la-gstqtmoovrecover.lo: gstqtmoovrecover.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmoovrecover.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Tpo -c -o libgstisommt_la-gstqtmoovrecover.lo `test -f 'gstqtmoovrecover.c' || echo '$(srcdir)/'`gstqtmoovrecover.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Tpo $(DEPDIR)/libgstisommt_la-gstqtmoovrecover.Plo
@@ -852,6 +866,13 @@ libgstisommt_la-properties.lo: properties.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='properties.c' object='libgstisommt_la-properties.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-properties.lo `test -f 'properties.c' || echo '$(srcdir)/'`properties.c
+
+libgstisommt_la-gstqtmuxmap.lo: gstqtmuxmap.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstqtmuxmap.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Tpo -c -o libgstisommt_la-gstqtmuxmap.lo `test -f 'gstqtmuxmap.c' || echo '$(srcdir)/'`gstqtmuxmap.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Tpo $(DEPDIR)/libgstisommt_la-gstqtmuxmap.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstqtmuxmap.c' object='libgstisommt_la-gstqtmuxmap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -c -o libgstisommt_la-gstqtmuxmap.lo `test -f 'gstqtmuxmap.c' || echo '$(srcdir)/'`gstqtmuxmap.c
 
 libgstisommt_la-gstisoff.lo: gstisoff.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstisommt_la_CFLAGS) $(CFLAGS) -MT libgstisommt_la-gstisoff.lo -MD -MP -MF $(DEPDIR)/libgstisommt_la-gstisoff.Tpo -c -o libgstisommt_la-gstisoff.lo `test -f 'gstisoff.c' || echo '$(srcdir)/'`gstisoff.c

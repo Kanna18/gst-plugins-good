@@ -57,6 +57,7 @@ mfu_box mfu_b;
 int pullatom(unsigned char *data, char *buf);
 void parse_mfu(unsigned char *data, int length);
 int process_init_data(GstMMTDemux * mmtdemux, unsigned char *buf,int size);
+int process_moof_data(GstMMTDemux * mmtdemux, unsigned char *buf,int size);
 void process_mfus(GstMMTDemux * mmtdemux, unsigned char* data, int size, int mediaType, GstBuffer *gbuf);
 
 

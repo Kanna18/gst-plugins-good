@@ -14,8 +14,8 @@ libgstisommt_la_LIBADD = \
 libgstisommt_la_LDFLAGS = ${GST_PLUGIN_LDFLAGS}
 libgstisommt_la_SOURCES = isommt-plugin.c gstrtpxqtdepay.c \
 	mmtdemux.c mmtdemux_types.c mmtdemux_dump.c mmtdemux_lang.c \
-	gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
-	properties.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
+	gstqtmux.c gstqtmoovrecover.c atoms.c MMTBitstream.c atomsrecovery.c descriptors.c \
+	properties.c gstqtmuxmap.c gstisoff.c MMTPacket.c mmtsignal.c process_mfu.c
 
 presetdir = $(datadir)/gstreamer-$(GST_API_VERSION)/presets
 preset_DATA = GstMMTMux.prs
@@ -29,6 +29,7 @@ noinst_HEADERS = \
 	mmtdemux_lang.h   \
 	qtpalette.h      \
 	gstrtpxqtdepay.h \
+	gstqtmux.h       \
 	gstqtmoovrecover.h \
 	atoms.h          \
 	atomsrecovery.h  \
@@ -36,6 +37,7 @@ noinst_HEADERS = \
 	properties.h     \
 	fourcc.h         \
 	gstisoff.h       \
+	gstqtmuxmap.h   \ 
         MMTTables.h      \
         MMTPacket.h     \
         MMTBitstream.h   
@@ -44,4 +46,6 @@ noinst_HEADERS = \
 			parse.h
 
 EXTRA_DIST = \
+	gstqtmux-doc.c \
+	gstqtmux-doc.h \
 	$(preset_DATA)

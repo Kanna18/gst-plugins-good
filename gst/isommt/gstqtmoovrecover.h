@@ -51,17 +51,17 @@
 G_BEGIN_DECLS
 
 #define GST_TYPE_QT_MOOV_RECOVER (gst_qt_moov_recover_get_type())
-#define GST_QT_MOOV_RECOVER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_QT_MOOV_RECOVER, GstMMTMoovRecover))
-#define GST_QT_MOOV_RECOVER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_QT_MOOV_RECOVER, GstMMTMoovRecover))
+#define GST_QT_MOOV_RECOVER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_QT_MOOV_RECOVER, GstQTMoovRecover))
+#define GST_QT_MOOV_RECOVER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_QT_MOOV_RECOVER, GstQTMoovRecover))
 #define GST_IS_QT_MOOV_RECOVER(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_QT_MOOV_RECOVER))
 #define GST_IS_QT_MOOV_RECOVER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_QT_MOOV_RECOVER))
-#define GST_QT_MOOV_RECOVER_CAST(obj) ((GstMMTMoovRecover*)(obj))
+#define GST_QT_MOOV_RECOVER_CAST(obj) ((GstQTMoovRecover*)(obj))
 
 
-typedef struct _GstMMTMoovRecover GstMMTMoovRecover;
-typedef struct _GstMMTMoovRecoverClass GstMMTMoovRecoverClass;
+typedef struct _GstQTMoovRecover GstQTMoovRecover;
+typedef struct _GstQTMoovRecoverClass GstQTMoovRecoverClass;
 
-struct _GstMMTMoovRecover
+struct _GstQTMoovRecover
 {
   GstPipeline pipeline;
 
@@ -75,7 +75,7 @@ struct _GstMMTMoovRecover
   gchar    *broken_input;
 };
 
-struct _GstMMTMoovRecoverClass
+struct _GstQTMoovRecoverClass
 {
   GstPipelineClass parent_class;
 };

@@ -88,7 +88,7 @@ enum
 };
 
 #define gst_qt_moov_recover_parent_class parent_class
-G_DEFINE_TYPE (GstMMTMoovRecover, gst_qt_moov_recover, GST_TYPE_PIPELINE);
+G_DEFINE_TYPE (GstQTMoovRecover, gst_qt_moov_recover, GST_TYPE_PIPELINE);
 
 /* property functions */
 static void gst_qt_moov_recover_set_property (GObject * object,
@@ -102,7 +102,7 @@ static GstStateChangeReturn gst_qt_moov_recover_change_state (GstElement *
 static void gst_qt_moov_recover_finalize (GObject * object);
 
 static void
-gst_qt_moov_recover_class_init (GstMMTMoovRecoverClass * klass)
+gst_qt_moov_recover_class_init (GstQTMoovRecoverClass * klass)
 {
   GObjectClass *gobject_class;
   GstElementClass *gstelement_class;
@@ -149,7 +149,7 @@ gst_qt_moov_recover_class_init (GstMMTMoovRecoverClass * klass)
 }
 
 static void
-gst_qt_moov_recover_init (GstMMTMoovRecover * qtmr)
+gst_qt_moov_recover_init (GstQTMoovRecover * qtmr)
 {
 }
 
@@ -167,7 +167,7 @@ gst_qt_moov_recover_run (void *data)
   FILE *output = NULL;
   MdatRecovFile *mdat_recov = NULL;
   MoovRecovFile *moov_recov = NULL;
-  GstMMTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (data);
+  GstQTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (data);
   GError *err = NULL;
   GError *warn = NULL;
 
@@ -285,7 +285,7 @@ static void
 gst_qt_moov_recover_get_property (GObject * object,
     guint prop_id, GValue * value, GParamSpec * pspec)
 {
-  GstMMTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (object);
+  GstQTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (object);
 
   GST_OBJECT_LOCK (qtmr);
   switch (prop_id) {
@@ -312,7 +312,7 @@ static void
 gst_qt_moov_recover_set_property (GObject * object,
     guint prop_id, const GValue * value, GParamSpec * pspec)
 {
-  GstMMTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (object);
+  GstQTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (object);
 
   GST_OBJECT_LOCK (qtmr);
   switch (prop_id) {
@@ -343,7 +343,7 @@ gst_qt_moov_recover_change_state (GstElement * element,
     GstStateChange transition)
 {
   GstStateChangeReturn ret;
-  GstMMTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (element);
+  GstQTMoovRecover *qtmr = GST_QT_MOOV_RECOVER_CAST (element);
 
   switch (transition) {
     case GST_STATE_CHANGE_NULL_TO_READY:
