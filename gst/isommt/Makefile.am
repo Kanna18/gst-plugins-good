@@ -40,7 +40,7 @@ noinst_HEADERS = \
 	gstqtmuxmap.h   \ 
         MMTTables.h      \
         MMTPacket.h     \
-        MMTBitstream.h   
+        MMTBitstream.h   \
 			atoms.h \
 			mmtsignal.h \
 			parse.h
