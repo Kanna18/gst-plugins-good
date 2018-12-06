@@ -1195,10 +1195,31 @@ calculate_next_max_timecode (GstSplitMuxSink * splitmux,
   } else {
     GstClockTime day_in_ns = 24 * 60 * 60 * GST_SECOND;
 
+    if ((cur_tc->config.flags & GST_VIDEO_TIME_CODE_FLAGS_DROP_FRAME) &&
+        (cur_tc->config.fps_d == 1001)) {
+      /* Checking fps_d is probably unneeded, but better safe than sorry
+       * (e.g. someone accidentally set a flag) */
+      GstVideoTimeCode *tc_for_offset;
+
+      /* Here, the duration of the 24:00:00;00 timecode isn't exactly one day,
+       * but slightly less. Calculate that duration from a fake timecode. The
+       * problem is that 24:00:00;00 isn't a valid timecode, so the workaround
+       * is to add one frame to 23:59:59;29 */
+      tc_for_offset =
+          gst_video_time_code_new (cur_tc->config.fps_n, cur_tc->config.fps_d,
+          NULL, cur_tc->config.flags, 23, 59, 59,
+          cur_tc->config.fps_n / cur_tc->config.fps_d, 0);
+      day_in_ns =
+          gst_video_time_code_nsec_since_daily_jam (tc_for_offset) +
+          gst_util_uint64_scale (GST_SECOND, cur_tc->config.fps_d,
+          cur_tc->config.fps_n);
+      gst_video_time_code_free (tc_for_offset);
+    }
     next_max_tc_time =
         day_in_ns - cur_tc_time + target_tc_time +
         splitmux->fragment_start_time;
   }
+
   GST_INFO_OBJECT (splitmux, "Next max TC time: %" GST_TIME_FORMAT
       " from ref TC: %" GST_TIME_FORMAT, GST_TIME_ARGS (next_max_tc_time),
       GST_TIME_ARGS (cur_tc_time));

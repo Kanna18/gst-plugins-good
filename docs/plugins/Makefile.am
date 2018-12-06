@@ -169,7 +169,7 @@ EXTRA_HFILES = \
     $(top_srcdir)/gst/isommt/mmtdemux.h \
     $(top_srcdir)/gst/isommt/mmtsignal.h \
     $(top_srcdir)/gst/isommt/MMTPacket.h \
-    $(top_srcdir)/gst/isommt/MMTBitstream.h \
+    $(top_srcdir)/gst/isommt/MMTBitstream.h 
 	$(top_srcdir)/gst/replaygain/gstrganalysis.h \
 	$(top_srcdir)/gst/replaygain/gstrglimiter.h \
 	$(top_srcdir)/gst/replaygain/gstrgvolume.h \

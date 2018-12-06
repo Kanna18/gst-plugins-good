@@ -40,6 +40,7 @@ if cc.get_id() == 'msvc'
       '/wd4146', # unary minus on unsigned (beware INT_MIN)
       '/wd4244', # lossy type conversion (e.g. double -> int)
       '/wd4305', # truncating type conversion (e.g. double -> float)
+      cc.get_supported_arguments(['/utf-8']), # set the input encoding to utf-8
       language : 'c')
   # Disable SAFESEH with MSVC for plugins and libs that use external deps that
   # are built with MinGW
@@ -304,12 +305,18 @@ if build_gstgl
   endforeach
 endif
 
-zlib_dep = dependency('zlib', fallback: ['zlib', 'zlib_dep'])
+zlib_dep = dependency('zlib', required : false)
+if not zlib_dep.found()
+  zlib_dep = cc.find_library('z', required : false)
+  if not zlib_dep.found() or not cc.has_header('zlib.h')
+    zlib_dep = subproject('zlib').get_variable('zlib_dep')
+  endif
+endif
+cdata.set('HAVE_ZLIB', true)
+
 glib_deps = [dependency('glib-2.0', version : glib_req, fallback: ['glib', 'libglib_dep']),
              dependency('gobject-2.0', fallback: ['glib', 'libgobject_dep'])]
 gio_dep = dependency('gio-2.0', fallback: ['glib', 'libgio_dep'])
-
-cdata.set('HAVE_ZLIB', zlib_dep.found())
 
 gst_plugins_good_args = ['-DHAVE_CONFIG_H']
 configinc = include_directories('.')

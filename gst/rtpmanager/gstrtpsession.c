@@ -1270,6 +1270,7 @@ gst_rtp_session_change_state (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_PAUSED_TO_READY:
       /* downstream is now releasing the dataflow and we can join. */
       join_rtcp_thread (rtpsession);
+      rtp_session_reset (rtpsession->priv->session);
       break;
     case GST_STATE_CHANGE_READY_TO_NULL:
       break;
@@ -1982,6 +1983,7 @@ gst_rtp_session_chain_recv_rtcp (GstPad * pad, GstObject * parent,
   GstRtpSession *rtpsession;
   GstRtpSessionPrivate *priv;
   GstClockTime current_time;
+  GstClockTime running_time;
   guint64 ntpnstime;
 
   rtpsession = GST_RTP_SESSION (parent);
@@ -1994,9 +1996,10 @@ gst_rtp_session_chain_recv_rtcp (GstPad * pad, GstObject * parent,
   GST_RTP_SESSION_UNLOCK (rtpsession);
 
   current_time = gst_clock_get_time (priv->sysclock);
-  get_current_times (rtpsession, NULL, &ntpnstime);
+  get_current_times (rtpsession, &running_time, &ntpnstime);
 
-  rtp_session_process_rtcp (priv->session, buffer, current_time, ntpnstime);
+  rtp_session_process_rtcp (priv->session, buffer, current_time, running_time,
+      ntpnstime);
 
   return GST_FLOW_OK;           /* always return OK */
 }

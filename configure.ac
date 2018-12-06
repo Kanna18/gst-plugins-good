@@ -395,7 +395,6 @@ AG_GST_CHECK_PLUGIN(id3demux)
 AG_GST_CHECK_PLUGIN(imagefreeze)
 AG_GST_CHECK_PLUGIN(interleave)
 AG_GST_CHECK_PLUGIN(isomp4)
-AG_GST_CHECK_PLUGIN(isommt)
 AG_GST_CHECK_PLUGIN(law)
 AG_GST_CHECK_PLUGIN(level)
 AG_GST_CHECK_PLUGIN(matroska)
@@ -1239,7 +1238,6 @@ gst/icydemux/Makefile
 gst/imagefreeze/Makefile
 gst/interleave/Makefile
 gst/isomp4/Makefile
-gst/isommt/Makefile
 gst/law/Makefile
 gst/level/Makefile
 gst/matroska/Makefile

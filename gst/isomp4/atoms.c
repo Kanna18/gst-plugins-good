@@ -3281,7 +3281,7 @@ atom_trak_update_duration (AtomTRAK * trak, guint64 moov_timescale)
       atom_stts_get_total_duration (&trak->mdia.minf.stbl.stts);
   if (trak->mdia.mdhd.time_info.timescale != 0) {
     trak->tkhd.duration =
-        gst_util_uint64_scale (trak->mdia.mdhd.time_info.duration,
+        gst_util_uint64_scale_round (trak->mdia.mdhd.time_info.duration,
         moov_timescale, trak->mdia.mdhd.time_info.timescale);
   } else {
     trak->tkhd.duration = 0;
@@ -4349,11 +4349,8 @@ atom_trak_set_video_type (AtomTRAK * trak, AtomsContext * context,
   /* ISO file spec says track header w/h indicates track's visual presentation
    * (so this together with pixels w/h implicitly defines PAR) */
   if (par_n && (context->flavor != ATOMS_TREE_FLAVOR_MOV)) {
-    /* Assumes square pixels display */
-    if (!gst_video_calculate_display_ratio (&dwidth, &dheight, entry->width,
-            entry->height, par_n, par_d, 1, 1)) {
-      GST_WARNING ("Could not calculate display ratio");
-    }
+    dwidth = entry->width * par_n / par_d;
+    dheight = entry->height;
   }
 
   atom_trak_set_video_commons (trak, context, scale, dwidth, dheight);

@@ -58,8 +58,8 @@ plugin_init (GstPlugin * plugin)
           GST_RANK_MARGINAL, GST_TYPE_RTP_XQT_DEPAY))
     return FALSE;*/
 
-//  if (!gst_qt_mux_register (plugin))
-//    return FALSE;
+  if (!gst_qt_mux_register (plugin))
+    return FALSE;
   if (!gst_qt_moov_recover_register (plugin))
     return FALSE;
 

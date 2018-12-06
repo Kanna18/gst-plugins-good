@@ -151,6 +151,8 @@ static gboolean gst_matroska_demux_handle_src_query (GstPad * pad,
 
 static gboolean gst_matroska_demux_handle_sink_event (GstPad * pad,
     GstObject * parent, GstEvent * event);
+static gboolean gst_matroska_demux_handle_sink_query (GstPad * pad,
+    GstObject * parent, GstQuery * query);
 static GstFlowReturn gst_matroska_demux_chain (GstPad * pad,
     GstObject * object, GstBuffer * buffer);
 
@@ -271,6 +273,8 @@ gst_matroska_demux_init (GstMatroskaDemux * demux)
       GST_DEBUG_FUNCPTR (gst_matroska_demux_chain));
   gst_pad_set_event_function (demux->common.sinkpad,
       GST_DEBUG_FUNCPTR (gst_matroska_demux_handle_sink_event));
+  gst_pad_set_query_function (demux->common.sinkpad,
+      GST_DEBUG_FUNCPTR (gst_matroska_demux_handle_sink_query));
   gst_element_add_pad (GST_ELEMENT (demux), demux->common.sinkpad);
 
   /* init defaults for common read context */
@@ -352,6 +356,11 @@ gst_matroska_demux_reset (GstElement * element)
   demux->invalid_duration = FALSE;
 
   demux->cached_length = G_MAXUINT64;
+
+  if (demux->deferred_seek_event)
+    gst_event_unref (demux->deferred_seek_event);
+  demux->deferred_seek_event = NULL;
+  demux->deferred_seek_pad = NULL;
 
   gst_flow_combiner_clear (demux->flowcombiner);
 }
@@ -1894,9 +1903,13 @@ gst_matroska_demux_element_send_event (GstElement * element, GstEvent * event)
   if (GST_EVENT_TYPE (event) == GST_EVENT_SEEK) {
     /* no seeking until we are (safely) ready */
     if (demux->common.state != GST_MATROSKA_READ_STATE_DATA) {
-      GST_DEBUG_OBJECT (demux, "not ready for seeking yet");
-      gst_event_unref (event);
-      return FALSE;
+      GST_DEBUG_OBJECT (demux,
+          "not ready for seeking yet, deferring seek: %" GST_PTR_FORMAT, event);
+      if (demux->deferred_seek_event)
+        gst_event_unref (demux->deferred_seek_event);
+      demux->deferred_seek_event = event;
+      demux->deferred_seek_pad = NULL;
+      return TRUE;
     }
     res = gst_matroska_demux_handle_seek_event (demux, NULL, event);
   } else {
@@ -2709,10 +2722,10 @@ gst_matroska_demux_handle_seek_event (GstMatroskaDemux * demux,
    * would be determined again when parsing, but anyway ... */
   seeksegment.duration = demux->common.segment.duration;
 
-  flush = !!(flags & GST_SEEK_FLAG_FLUSH);
-  keyunit = !!(flags & GST_SEEK_FLAG_KEY_UNIT);
-  after = !!(flags & GST_SEEK_FLAG_SNAP_AFTER);
-  before = !!(flags & GST_SEEK_FLAG_SNAP_BEFORE);
+  flush = ! !(flags & GST_SEEK_FLAG_FLUSH);
+  keyunit = ! !(flags & GST_SEEK_FLAG_KEY_UNIT);
+  after = ! !(flags & GST_SEEK_FLAG_SNAP_AFTER);
+  before = ! !(flags & GST_SEEK_FLAG_SNAP_BEFORE);
 
   /* always do full update if flushing,
    * otherwise problems might arise downstream with missing keyframes etc */
@@ -3005,9 +3018,14 @@ gst_matroska_demux_handle_src_event (GstPad * pad, GstObject * parent,
     case GST_EVENT_SEEK:
       /* no seeking until we are (safely) ready */
       if (demux->common.state != GST_MATROSKA_READ_STATE_DATA) {
-        GST_DEBUG_OBJECT (demux, "not ready for seeking yet");
-        gst_event_unref (event);
-        return FALSE;
+        GST_DEBUG_OBJECT (demux,
+            "not ready for seeking yet, deferring seek event: %" GST_PTR_FORMAT,
+            event);
+        if (demux->deferred_seek_event)
+          gst_event_unref (demux->deferred_seek_event);
+        demux->deferred_seek_event = event;
+        demux->deferred_seek_pad = pad;
+        return TRUE;
       }
 
       {
@@ -3096,6 +3114,47 @@ gst_matroska_demux_handle_src_event (GstPad * pad, GstObject * parent,
     case GST_EVENT_LATENCY:
     default:
       res = gst_pad_push_event (demux->common.sinkpad, event);
+      break;
+  }
+
+  return res;
+}
+
+static gboolean
+gst_matroska_demux_handle_sink_query (GstPad * pad, GstObject * parent,
+    GstQuery * query)
+{
+  GstMatroskaDemux *demux = GST_MATROSKA_DEMUX (parent);
+  gboolean res = FALSE;
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_BITRATE:
+    {
+      if (G_UNLIKELY (demux->cached_length == G_MAXUINT64 ||
+              demux->common.offset >= demux->cached_length)) {
+        demux->cached_length =
+            gst_matroska_read_common_get_length (&demux->common);
+      }
+
+      if (demux->cached_length < G_MAXUINT64
+          && demux->common.segment.duration > 0) {
+        /* TODO: better results based on ranges/index tables */
+        guint bitrate =
+            gst_util_uint64_scale (8 * demux->cached_length, GST_SECOND,
+            demux->common.segment.duration);
+
+        GST_LOG_OBJECT (demux, "bitrate query byte length: %" G_GUINT64_FORMAT
+            " duration %" GST_TIME_FORMAT " resulting in a bitrate of %u",
+            demux->cached_length,
+            GST_TIME_ARGS (demux->common.segment.duration), bitrate);
+
+        gst_query_set_bitrate (query, bitrate);
+        res = TRUE;
+      }
+      break;
+    }
+    default:
+      res = gst_pad_query_default (pad, (GstObject *) demux, query);
       break;
   }
 
@@ -3278,6 +3337,7 @@ gst_matroska_demux_update_tracks (GstMatroskaDemux * demux, GstEbmlRead * ebml)
         if (!gst_caps_is_equal (old_track->caps, new_track->caps)) {
           gst_pad_set_caps (new_track->pad, new_track->caps);
         }
+        gst_caps_replace (&old_track->caps, NULL);
 
         if (!gst_tag_list_is_equal (old_track->tags, new_track->tags)) {
           GST_DEBUG_OBJECT (old_track->pad, "Sending tags %p: %"
@@ -4355,8 +4415,8 @@ gst_matroska_demux_parse_blockgroup_or_simpleblock (GstMatroskaDemux * demux,
       /* If we're doing a keyframe-only trickmode, only push keyframes on video
        * streams */
       if (delta_unit
-          && demux->common.
-          segment.flags & GST_SEGMENT_FLAG_TRICKMODE_KEY_UNITS) {
+          && demux->common.segment.
+          flags & GST_SEGMENT_FLAG_TRICKMODE_KEY_UNITS) {
         GST_LOG_OBJECT (demux, "Skipping non-keyframe on stream %d",
             stream->index);
         ret = GST_FLOW_OK;
@@ -5276,6 +5336,20 @@ gst_matroska_demux_parse_id (GstMatroskaDemux * demux, guint32 id,
                     demux->first_cluster_offset + cluster.size);
               }
               demux->common.offset = demux->first_cluster_offset;
+            }
+
+            if (demux->deferred_seek_event) {
+              GstEvent *seek_event;
+              GstPad *seek_pad;
+              seek_event = demux->deferred_seek_event;
+              seek_pad = demux->deferred_seek_pad;
+              demux->deferred_seek_event = NULL;
+              demux->deferred_seek_pad = NULL;
+              GST_DEBUG_OBJECT (demux,
+                  "Handling deferred seek event: %" GST_PTR_FORMAT, seek_event);
+              gst_matroska_demux_handle_seek_event (demux, seek_pad,
+                  seek_event);
+              gst_event_unref (seek_event);
             }
 
             /* send initial segment - we wait till we know the first
@@ -6625,8 +6699,8 @@ gst_matroska_demux_audio_caps (GstMatroskaTrackAudioContext *
         *riff_audio_fmt = auds.format;
 
       /* FIXME: Handle reorder map */
-      caps = gst_riff_create_audio_caps (auds.format, NULL, &auds, NULL,
-          codec_data, codec_name, NULL);
+      caps = gst_riff_create_audio_caps (auds.format, NULL, &auds, codec_data,
+          NULL, codec_name, NULL);
       if (codec_data)
         gst_buffer_unref (codec_data);
 
